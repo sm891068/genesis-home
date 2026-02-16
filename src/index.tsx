@@ -5,6 +5,12 @@ const app = new Hono()
 
 // 提供靜態文件
 app.use('/static/*', serveStatic({ root: './public' }))
+app.use('/game-main.html', serveStatic({ path: './public/game-main.html' }))
+
+// 遊戲主畫面測試路由
+app.get('/game', (c) => {
+  return c.redirect('/game-main.html')
+})
 
 // 主頁面路由
 app.get('/', (c) => {
