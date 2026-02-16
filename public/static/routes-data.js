@@ -184,7 +184,7 @@ const ROUTES_DATA = {
             }
         },
         
-        startPartners: ['lr_001', 'ssr_005', 'sr_007'],
+        startPartners: ['ur_002', 'ssr_005', 'sr_007'],
         uniqueBuildings: ['intelligence_center', 'tech_lab'],
         traits: ['智謀', '情報', '策略', '科技'],
         

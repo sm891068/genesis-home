@@ -1,56 +1,60 @@
 // ========== 20位核心角色完整數據 ==========
 
 const CORE_PARTNERS_20 = [
-    // ===== LR 傳說級 (金色) - 2位 =====
+    // ===== LR 傳說級 (金色) - 1位（唯一）=====
     {
         id: 'lr_001',
-        name: '龍霸天',
-        nickname: '江湖龍王',
+        name: '龍爺',
+        nickname: '傳奇教父',
         rarity: 'LR',
         job: 'QUEEN',
-        avatar: '🐉',
+        avatar: '🐲',
         gender: 'male',
-        age: 45,
-        personality: 'dominant',  // 性格：霸道
+        age: 65,
+        personality: 'wise',  // 性格：睿智
         
-        background: '曾經統治整個地下世界的傳奇人物，你父親的老友。退隱江湖多年後，因欣賞你的潛力而選擇追隨。掌握龐大的人脈網絡與秘密情報。',
+        background: '你的父親，曾經統治整個地下世界的傳奇人物。縱橫江湖四十年，無人敢犯。在你接手家族事業前病逝，留下了龐大的遺產與未完成的野心。他的教誨與精神將永遠指引著你。',
         
-        specialty: '全能指揮',
-        position: '核心幹部',
+        specialty: '傳奇指揮',
+        position: '已故教父（精神支柱）',
         
         baseStats: {
-            STR: 95,
-            DEF: 90,
-            AGI: 75,
-            INT: 98,
-            WIS: 92
+            STR: 100,
+            DEF: 100,
+            AGI: 85,
+            INT: 100,
+            WIS: 100
         },
         
         activeSkill: 'ROYAL_COMMAND',
         passiveSkill: 'BORN_LEADER',
         
         personalQuest: {
-            title: '龍王歸來',
-            description: '協助龍霸天奪回失去的地盤',
-            reward: '專屬技能「龍之威壓」'
+            title: '父親的遺志',
+            description: '完成父親未竟的事業，統一地下世界',
+            reward: '專屬技能「龍之傳承」+ 全屬性永久 +20%'
         },
         
         dialogues: {
-            greeting: '小子，你有你父親當年的風範。',
-            battleStart: '讓我來教你什麼叫真正的江湖！',
-            victory: '這才是老大該有的樣子。',
-            levelUp: '年輕人，還不錯嘛。'
+            greeting: '兒子，記住，這座城市是我們的工地。',
+            battleStart: '別碰毒品，那是底線。',
+            victory: '這才是龍家的子孫。',
+            levelUp: '你已經超越我了，孩子。',
+            memory: '父親的教誨永遠迴響在耳邊...'
         },
         
-        favoriteGifts: ['高級雪茄', '古董字畫', '名貴洋酒'],
-        unlock: 'route_F'
+        favoriteGifts: ['父親的遺物', '家族族譜', '陳年老酒'],
+        unlock: 'story_complete',  // 特殊：完成主線後才能作為可操作角色
+        isDeceased: true,  // 標記為已故
+        spiritGuide: true  // 精神導師身份
     },
     
+    // ===== UR 究極稀有 (紅色) - 4位 =====
     {
-        id: 'lr_002',
+        id: 'ur_001',
         name: '夜影',
         nickname: '暗夜女皇',
-        rarity: 'LR',
+        rarity: 'UR',
         job: 'ASSASSIN',
         avatar: '🌙',
         gender: 'female',
@@ -99,9 +103,8 @@ const CORE_PARTNERS_20 = [
         unlock: 'achievement_assassin_master'
     },
     
-    // ===== UR 究極稀有 (紅色) - 3位 =====
     {
-        id: 'ur_001',
+        id: 'ur_002',
         name: '鐵拳輝',
         nickname: '不敗拳王',
         rarity: 'UR',
@@ -145,7 +148,7 @@ const CORE_PARTNERS_20 = [
     },
     
     {
-        id: 'ur_002',
+        id: 'ur_003',
         name: '刀鋒',
         nickname: '雙刀殺神',
         rarity: 'UR',
@@ -189,7 +192,7 @@ const CORE_PARTNERS_20 = [
     },
     
     {
-        id: 'ur_003',
+        id: 'ur_004',
         name: '白蓮',
         nickname: '冰山美人',
         rarity: 'UR',
