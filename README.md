@@ -1,192 +1,335 @@
 # 黑道建築 Underworld Architect
 
-## 項目概述
-- **名稱**: 黑道建築 Underworld Architect
-- **類型**: 網頁經營模擬遊戲
-- **技術**: Hono + TypeScript + Cloudflare Pages
-- **風格**: 黑金美學 + 黑道題材
+<div align="center">
 
-## 功能特色
+![Version](https://img.shields.io/badge/version-0.3.0%20Beta-gold)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Platform](https://img.shields.io/badge/platform-Web-green)
 
-### 已完成功能
-1. **主選單系統**
-   - 雨幕+閃電動畫效果
-   - 黑金配色主題
-   - 完整的菜單選項
+一款融合黑道經營、角色收集、後宮養成的策略模擬遊戲
 
-2. **遊戲流程**
-   - 父親對話載入畫面（12句台詞）
-   - 四路線選擇系統（A/B/C/D）
-   - 組織命名系統
+[English](#) | [繁體中文](#) | [简体中文](#)
 
-3. **遊戲核心**
-   - 6x6 建築地圖系統
-   - 建設/升級機制
-   - 資源管理（資金/人手/聲望）
-   - 回合制收入系統
+[🎮 立即遊玩](https://3000-iz94nfxwjw8t53nd2v99t-dfc00ec5.sandbox.novita.ai) | [📖 文檔](./VERSION.md) | [👥 角色圖鑑](./CHARACTERS.md)
 
-4. **成就系統**
-   - 成就殿堂（已解鎖/進行中/未解鎖）
-   - 成就篩選（故事/經濟/建築/夥伴）
-   - 進度條可視化
+</div>
 
-5. **排行榜系統**
-   - 榮耀殿堂
-   - 三種排行榜（全時代/本月/本週）
-   - 前三名特殊樣式
+---
 
-6. **圖鑑系統**
-   - 夥伴圖鑑（黑道/女王/少爺）
-   - 解鎖狀態顯示
+## 🌟 特色功能
 
-7. **存檔系統**
-   - LocalStorage 本地存檔
-   - 多存檔槽位支持
-   - 快速存檔功能
+### 🎯 核心系統
+- **5條路線選擇** - 正道、資本、魅力、武力、智謀，每條路線獨特的遊戲體驗
+- **26位角色** - 從N到LR，豐富的稀有度系統
+- **AI性格系統** - 8種人格類型，每位角色都有獨特的AI行為邏輯
+- **後宮養成** - 11級好感度系統，解鎖專屬劇情與獎勵
+- **吃卡系統** - N/R卡可用於經驗強化（2%/4%加成）
 
-8. **設定系統**
-   - 音效/遊戲/介面設定
-   - 數據清除功能
+### 🎨 UI/UX
+- **響應式設計** - 完美適配手機、平板、電腦端
+- **金色黑道風格** - 沉浸式視覺體驗
+- **流暢動畫** - 下雨背景、懸停效果、過場動畫
+- **整合式流程** - 路線選擇+命名一體化設計
 
-## 數據模型
+### 📊 遊戲數據
+- **稀有度**: LR, UR, SSR, SR, R, N
+- **職業**: 戰士、保鏢、刺客、槍手、醫生、狙擊手、女王、秘書
+- **技能**: 主動技能 + 被動技能
+- **屬性**: STR, DEF, AGI, INT, WIS
 
-### 遊戲數據結構
-```javascript
-gameData = {
-  route: 'A/B/C/D',
-  routeName: '路線名稱',
-  gangName: '組織名稱',
-  money: 10000,
-  day: 1,
-  reputation: 50,
-  grid: [], // 36格地圖
-  partners: [], // 夥伴列表
-  currentSaveId: null,
-  diary: []
-}
+---
+
+## 🚀 快速開始
+
+### 線上遊玩
+```bash
+# 直接訪問線上版本
+https://3000-iz94nfxwjw8t53nd2v99t-dfc00ec5.sandbox.novita.ai
 ```
 
-### 建築類型
-- 🏰 總部（指揮中心）
-- 🏪 便利商店（穩定收入）
-- 🏠 住宅（人口上限）
-- 🏭 工廠（高收入）
-- 🏨 酒店（高級客戶）
-- 🚉 車站（移動速度）
-- 🏥 醫療站（治療）
-- 🎤 KTV（情報）
-- 🎰 賭場（高風險高收入）
+### 本地開發
 
-### 四大路線
-1. **A - 道義路線**: 聲望+15｜正義夥伴易招募
-2. **B - 資本路線**: 資金+$8,000｜收益+15%
-3. **C - 聲望路線**: 忠誠+20%｜談判+25%
-4. **D - 魅力路線**: 異性談判+35%｜KTV收益+50%
+#### 環境要求
+- Node.js >= 18.0.0
+- npm >= 9.0.0
 
-## 使用指南
-
-### 開發環境
+#### 安裝步驟
 ```bash
-# 安裝依賴
+# 1. Clone 倉庫
+git clone https://github.com/YOUR_USERNAME/underworld-architect.git
+cd underworld-architect
+
+# 2. 安裝依賴
 npm install
 
-# 本地開發
+# 3. 開發模式
 npm run dev
 
-# 構建
+# 4. 構建生產版本
 npm run build
 
-# PM2 啟動（沙盒環境）
-pm2 start ecosystem.config.cjs
-```
+# 5. 預覽生產版本
+npm run preview
 
-### 生產部署
-```bash
-# 部署到 Cloudflare Pages
+# 6. 部署到 Cloudflare Pages
 npm run deploy
 ```
 
-## URLs
-- **開發環境**: http://localhost:3000
-- **生產環境**: （待部署）
+### Docker 部署
+```bash
+# 構建鏡像
+docker build -t underworld-architect .
 
-## 音樂資源
-- **主選單BGM**: Dark cinematic mafia theme (60秒循環)
-  - 風格：黑色電影 + 黑幫氛圍
-  - 節奏：65 BPM
-  - 調性：D Minor
-  - 下載：[main_menu_bgm.mp3](https://www.genspark.ai/api/files/s/E9KlmJXR)
+# 運行容器
+docker run -p 3000:3000 underworld-architect
+```
 
-## 美術設計
+---
 
-### 色彩系統
-- **主色調**: 黑金配色（#d4af37）
-- **背景**: 深紫黑漸變（#0a0e27 - #1a1f3a）
-- **強調色**: 紅（危險）/ 藍（信息）/ 紫（神秘）/ 綠（正義）
+## 📖 遊戲指南
 
-### 動畫效果
-- 多層次發光（glow）
-- 邊框流光（borderGlow）
-- 浮動效果（float）
-- 滑入動畫（slideUp/slideDown）
-- 雨幕+閃電背景
+### 🎮 遊戲流程
+```
+主選單 → 新的傳承 → 父親對話(14秒) → 路線選擇 → 命名 → 開始遊戲
+```
 
-## 未實現功能
+### 🛣️ 五條路線
 
-### 遊戲核心
-- [ ] 基地內部系統
-- [ ] 後宮系統
-- [ ] 夥伴詳細面板
-- [ ] 編制/戰鬥系統
-- [ ] 世界地圖系統
+| 路線 | 圖標 | 特色 | 起始資金 | 聲望 | 人數 |
+|------|------|------|----------|------|------|
+| 正道 | ⚖️ | 道義與聲望 | 12,000 | 75 | 4 |
+| 資本 | 💰 | 金錢至上 | 25,000 | 50 | 3 |
+| 魅力 | 💋 | 後宮經營 | 15,000 | 60 | 3 |
+| 武力 | ⚔️ | 拳頭硬道理 | 10,000 | 55 | 5 |
+| 智謀 | 🧠 | 謀略為先 | 14,000 | 65 | 3 |
 
-### 進階功能
-- [ ] 事件系統
-- [ ] 對話系統
-- [ ] 劇情系統
-- [ ] PVP 系統
-- [ ] 公會/聯盟系統
+### 👥 角色系統
 
-## 後續開發建議
+#### 稀有度分布
+- **LR（傳說）**: 2位 - 龍霸天、琉璃女王
+- **UR（究極）**: 3位 - 血刃、紅姐、冰心
+- **SSR（特級）**: 6位 - 白琴、算盤林、拳王輝、雙槍李、妖姬、羅奈米
+- **SR（稀有）**: 10位 - 包含新手引導者「阿福」
+- **R（精良）**: 3位 - 小弟甲、小弟乙、小紅
+- **N（普通）**: 2位 - 路人甲、路人乙
 
-### 短期（1-2週）
-1. 完善建築系統（更多建築類型）
-2. 實現基本戰鬥系統
-3. 添加更多成就
-4. 完善夥伴系統
+#### 後宮系統
+- **11級好感度** - 從陌生冷漠到絕對統治
+- **專屬劇情** - 每個好感等級解鎖獨特對話
+- **角色互動** - 基於AI性格的動態對話
+- **獎勵解鎖** - 屬性加成、技能解鎖、CG解鎖
 
-### 中期（1個月）
-1. 實現完整事件系統
-2. 添加劇情線
-3. 音效整合
-4. 多語言支持
+詳細角色資訊請查看 [角色圖鑑](./CHARACTERS.md)
 
-### 長期（2-3個月）
-1. 在線排行榜
-2. 社交系統
-3. 付費內容
-4. 移動端優化
+---
 
-## 技術細節
+## 🛠️ 技術棧
 
-### 存儲方式
-- LocalStorage（本地存檔）
-- 未來可整合 Cloudflare KV（雲端存檔）
+### 前端
+- **框架**: Vanilla JavaScript (ES6+)
+- **UI**: HTML5 + CSS3
+- **字體**: Noto Serif TC
+- **圖標**: Emoji + FontAwesome
+- **樣式**: CSS Variables + Flexbox + Grid
 
-### 性能優化
-- CSS 變數系統
-- 動畫 GPU 加速
-- 懶加載策略
+### 後端
+- **框架**: Hono (Cloudflare Workers)
+- **運行時**: Cloudflare Workers Runtime
+- **構建工具**: Vite 6.4.1
+- **部署**: Cloudflare Pages
 
-## 部署狀態
-- **平台**: Cloudflare Pages
-- **狀態**: 開發中
-- **最後更新**: 2026-02-16
+### 數據
+- **存儲**: LocalStorage (當前)
+- **未來**: Cloudflare D1 / KV / R2
 
-## 版本歷史
-- **v1.0.0** (2026-02-16): 初始版本
-  - 完整主選單系統
-  - 基礎遊戲流程
-  - 建築系統
-  - 存檔系統
-  - 成就/排行榜/圖鑑系統
+### 開發工具
+- **版本控制**: Git
+- **包管理**: npm
+- **代碼規範**: ESLint
+- **進程管理**: PM2 (開發環境)
+
+---
+
+## 📂 項目結構
+
+```
+webapp/
+├── src/
+│   └── index.tsx                 # Hono 應用入口
+├── public/
+│   ├── index.html                # 主選單頁面
+│   ├── game-main.html            # 遊戲主畫面
+│   └── static/
+│       ├── core/
+│       │   └── game-state.js     # 遊戲狀態管理
+│       ├── ui/
+│       │   └── shared-ui.js      # 共享UI組件
+│       ├── data/
+│       │   ├── ai-personality.js      # AI性格庫
+│       │   └── ai-character-logic.js  # AI角色邏輯
+│       ├── modules/
+│       │   ├── base-system.js         # 基地系統
+│       │   ├── harem-system.js        # 後宮系統
+│       │   ├── partner-system.js      # 夥伴系統
+│       │   ├── faction-ui.js          # 派系UI
+│       │   ├── team-ui.js             # 隊伍UI
+│       │   ├── save-ui.js             # 存檔UI
+│       │   ├── settings-ui.js         # 設定UI
+│       │   └── help-ui.js             # 幫助UI
+│       ├── routes-data.js        # 路線數據
+│       └── partner-data.js       # 角色數據
+├── dist/                         # 構建輸出
+├── .git/                         # Git倉庫
+├── .gitignore                    # Git忽略配置
+├── ecosystem.config.cjs          # PM2配置
+├── wrangler.jsonc                # Cloudflare配置
+├── vite.config.ts                # Vite配置
+├── package.json                  # 依賴配置
+├── tsconfig.json                 # TypeScript配置
+├── README.md                     # 項目說明
+├── VERSION.md                    # 版本資訊
+├── CHARACTERS.md                 # 角色圖鑑
+└── LICENSE                       # 授權文件
+```
+
+---
+
+## 🎯 開發路線圖
+
+### v0.3.0 Beta（當前版本）✅
+- [x] 主選單系統（7個按鈕）
+- [x] 父親對話系統（14秒）
+- [x] 5條路線選擇
+- [x] 整合式命名畫面
+- [x] 26位角色系統
+- [x] AI性格與行為系統
+- [x] 響應式設計
+
+### v0.4.0（計劃中）🚧
+- [ ] 存檔系統（多槽位）
+- [ ] 建設系統（建築升級）
+- [ ] 時間系統（日期推進）
+- [ ] 夥伴管理（強化、編組）
+- [ ] 基礎戰鬥系統
+- [ ] 後宮互動擴展
+
+### v0.5.0（計劃中）📅
+- [ ] 戰鬥系統完善
+- [ ] 任務系統
+- [ ] 商店系統
+- [ ] 劇情推進
+
+### v1.0.0（目標）🎉
+- [ ] 完整遊戲循環
+- [ ] 多平台部署
+- [ ] 多語言支援
+- [ ] 社交功能
+
+詳細路線圖請查看 [版本資訊](./VERSION.md)
+
+---
+
+## 🤝 貢獻指南
+
+我們歡迎任何形式的貢獻！
+
+### 如何貢獻
+1. Fork 本倉庫
+2. 創建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'feat: Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 開啟 Pull Request
+
+### 代碼規範
+- 使用 ESLint 檢查代碼
+- 遵循 Airbnb JavaScript Style Guide
+- 添加必要的註釋
+- 保持函數簡潔（<50行）
+
+### 提交訊息規範
+```
+feat: 新功能
+fix: 修復Bug
+docs: 文檔更新
+style: 代碼格式調整
+refactor: 代碼重構
+test: 測試相關
+chore: 構建/工具鏈更新
+```
+
+---
+
+## 📜 授權
+
+本項目採用 MIT 授權條款。詳見 [LICENSE](LICENSE) 文件。
+
+```
+MIT License
+
+Copyright (c) 2026 Underworld Architect Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction...
+```
+
+---
+
+## 📞 聯繫方式
+
+- **項目倉庫**: [GitHub](https://github.com/YOUR_USERNAME/underworld-architect)
+- **問題反饋**: [GitHub Issues](https://github.com/YOUR_USERNAME/underworld-architect/issues)
+- **討論區**: [GitHub Discussions](https://github.com/YOUR_USERNAME/underworld-architect/discussions)
+- **電子郵件**: dev@underworld-architect.com
+
+---
+
+## 🙏 致謝
+
+感謝所有為本項目做出貢獻的開發者和玩家！
+
+特別感謝：
+- [Hono](https://hono.dev/) - 輕量級Web框架
+- [Cloudflare](https://www.cloudflare.com/) - 邊緣運算平台
+- [Vite](https://vitejs.dev/) - 快速構建工具
+- [Noto Serif TC](https://fonts.google.com/noto/specimen/Noto+Serif+TC) - 優雅的中文字體
+
+---
+
+## 📊 項目狀態
+
+![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/underworld-architect?style=social)
+![GitHub forks](https://img.shields.io/github/forks/YOUR_USERNAME/underworld-architect?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/YOUR_USERNAME/underworld-architect?style=social)
+
+![GitHub issues](https://img.shields.io/github/issues/YOUR_USERNAME/underworld-architect)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/YOUR_USERNAME/underworld-architect)
+![GitHub last commit](https://img.shields.io/github/last-commit/YOUR_USERNAME/underworld-architect)
+
+---
+
+## 🎮 遊戲截圖
+
+### 主選單
+![主選單](./screenshots/main-menu.png)
+
+### 父親對話
+![父親對話](./screenshots/father-dialogue.png)
+
+### 路線選擇
+![路線選擇](./screenshots/route-selection.png)
+
+### 遊戲主畫面
+![遊戲主畫面](./screenshots/game-main.png)
+
+---
+
+<div align="center">
+
+**⭐ 如果你喜歡這個項目，請給我們一個 Star！⭐**
+
+Made with ❤️ by Underworld Architect Team
+
+[🔝 回到頂部](#黑道建築-underworld-architect)
+
+</div>
