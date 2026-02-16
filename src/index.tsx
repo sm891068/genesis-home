@@ -6,14 +6,20 @@ const app = new Hono()
 // 提供靜態文件
 app.use('/static/*', serveStatic({ root: './public' }))
 app.use('/game-main.html', serveStatic({ path: './public/game-main.html' }))
+app.use('/index.html', serveStatic({ path: './public/index.html' }))
 
 // 遊戲主畫面測試路由
 app.get('/game', (c) => {
   return c.redirect('/game-main.html')
 })
 
-// 主頁面路由
+// 主頁面路由（重定向到新主選單）
 app.get('/', (c) => {
+  return c.redirect('/index.html')
+})
+
+// 舊主頁面路由（保留用於測試）
+app.get('/old', (c) => {
   return c.html(`<!DOCTYPE html>
 <html lang="zh-TW">
 <head>

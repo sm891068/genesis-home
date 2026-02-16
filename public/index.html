@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黑道建築 Underworld Architect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f4d03f;
+            --gold-dark: #b8941f;
+            --gold-glow: rgba(212, 175, 55, 0.3);
+            --red: #ff2e63;
+            --blue: #3498db;
+            --bg: #0a0e27;
+            --bg-light: #151a35;
+            --panel: rgba(10, 14, 39, 0.98);
+            --text: #e8e8e8;
+            --gray: #888;
+            --border: rgba(212, 175, 55, 0.2);
+        }
+        
+        body {
+            font-family: 'Noto Serif TC', serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* ========== 下雨動畫 ========== */
+        .rain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(transparent, rgba(212, 175, 55, 0.3));
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+        
+        /* ========== 主選單容器 ========== */
+        #main-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+            background: radial-gradient(ellipse at center, rgba(212,175,55,0.05) 0%, transparent 70%);
+        }
+        
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--gold);
+            text-shadow: 0 0 30px var(--gold-glow), 0 0 60px var(--gold-glow);
+            margin-bottom: 20px;
+            animation: glow 3s ease-in-out infinite;
+            font-family: 'Noto Serif TC', serif;
+            letter-spacing: 4px;
+        }
+        
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 30px var(--gold-glow), 0 0 60px var(--gold-glow); }
+            50% { text-shadow: 0 0 40px var(--gold-glow), 0 0 80px var(--gold-glow), 0 0 100px rgba(212,175,55,0.1); }
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: var(--gray);
+            margin-bottom: 60px;
+            letter-spacing: 2px;
+        }
+        
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 320px;
+        }
+        
+        .menu-btn {
+            padding: 18px 40px;
+            background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+            border: 2px solid var(--gold-dark);
+            color: var(--text);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+            font-family: 'Noto Serif TC', serif;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+        }
+        
+        .menu-btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .menu-btn:hover {
+            background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(212,175,55,0.1));
+            border-color: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212,175,55,0.3);
+        }
+        
+        .menu-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: rgba(255,255,255,0.05);
+            border-color: var(--gray);
+        }
+        
+        .menu-btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .footer-info {
+            position: fixed;
+            bottom: 20px;
+            text-align: center;
+            width: 100%;
+            font-size: 12px;
+            color: var(--gray);
+            z-index: 10;
+        }
+        
+        /* ========== Toast 樣式 ========== */
+        .toast {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.95);
+            border: 1.5px solid var(--gold);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            box-shadow: 0 0 30px var(--gold-glow);
+        }
+        
+        .toast.show { opacity: 1; }
+        
+        .toast.success { border-color: #27ae60; }
+        .toast.error { border-color: #e74c3c; }
+        .toast.warning { border-color: #f39c12; }
+        
+        /* ========== 響應式設計 ========== */
+        @media (max-width: 768px) {
+            .logo { font-size: 36px; }
+            .subtitle { font-size: 14px; margin-bottom: 40px; }
+            .menu-buttons { min-width: 280px; gap: 12px; }
+            .menu-btn { padding: 16px 32px; font-size: 16px; }
+        }
+        
+        @media (max-width: 480px) {
+            .logo { font-size: 28px; }
+            .subtitle { font-size: 12px; margin-bottom: 30px; }
+            .menu-buttons { min-width: 240px; gap: 10px; }
+            .menu-btn { padding: 14px 28px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 下雨動畫容器 -->
+    <div class="rain" id="rain"></div>
+
+    <!-- Toast 提示 -->
+    <div id="toast" class="toast"></div>
+
+    <!-- 主選單 -->
+    <div id="main-menu">
+        <div class="logo">黑道建築</div>
+        <div class="subtitle">UNDERWORLD ARCHITECT</div>
+        
+        <div class="menu-buttons">
+            <button class="menu-btn" onclick="menuController.newGame()">
+                🆕 新的傳承
+            </button>
+            <button class="menu-btn" id="continue-btn" onclick="menuController.continueGame()" disabled>
+                ▶️ 繼續遊戲
+            </button>
+            <button class="menu-btn" onclick="menuController.showPartnerGallery()">
+                📖 夥伴圖鑑
+            </button>
+            <button class="menu-btn" onclick="menuController.showAchievements()">
+                🏆 成就殿堂
+            </button>
+            <button class="menu-btn" onclick="menuController.showSettings()">
+                ⚙️ 設定
+            </button>
+        </div>
+        
+        <div class="footer-info">
+            Version 1.0.0 | Made with ❤️ by Your Studio
+        </div>
+    </div>
+
+    <!-- 載入核心腳本 -->
+    <script src="/static/core/game-state.js"></script>
+    <script src="/static/ui/shared-ui.js"></script>
+    <script src="/static/routes-data.js"></script>
+    <script src="/static/core-partners-20.js"></script>
+    <script src="/static/partner-data.js"></script>
+    <script src="/static/achievements-24.js"></script>
+
+    <script>
+    // ========== 主選單控制器 ==========
+    const menuController = {
+        init() {
+            console.log('[MainMenu] 初始化主選單');
+            
+            // 檢查是否有存檔
+            this.updateContinueButton();
+            
+            // 初始化下雨動畫
+            this.initRain();
+        },
+
+        // 更新繼續按鈕狀態
+        updateContinueButton() {
+            const btn = document.getElementById('continue-btn');
+            const latestSave = GameState.getLatestSave();
+            
+            if (latestSave) {
+                btn.disabled = false;
+                btn.textContent = `▶️ 繼續遊戲 (Day ${latestSave.day})`;
+            } else {
+                btn.disabled = true;
+                btn.textContent = '▶️ 繼續遊戲';
+            }
+        },
+
+        // 新遊戲
+        newGame() {
+            Toast.show('正在準備新遊戲...', 1500);
+            
+            // TODO: 顯示路線選擇畫面
+            setTimeout(() => {
+                this.showRouteSelection();
+            }, 1500);
+        },
+
+        // 顯示路線選擇（暫時跳過，直接開始）
+        showRouteSelection() {
+            // 暫時使用 A 路線直接開始
+            const gangName = prompt('請輸入您的幫派名稱：', '龍門幫');
+            
+            if (!gangName) {
+                Toast.warning('已取消新遊戲');
+                return;
+            }
+
+            LoadingScreen.show('正在初始化遊戲...');
+            
+            setTimeout(() => {
+                // 開始新遊戲（路線 A）
+                const success = GameState.newGame('A', gangName, '老大');
+                
+                if (success) {
+                    LoadingScreen.hide();
+                    Toast.success(`歡迎來到 ${gangName}！`);
+                    
+                    // 跳轉到遊戲畫面
+                    setTimeout(() => {
+                        window.location.href = '/game-main.html';
+                    }, 1000);
+                } else {
+                    LoadingScreen.hide();
+                    Toast.error('遊戲初始化失敗');
+                }
+            }, 2000);
+        },
+
+        // 繼續遊戲
+        continueGame() {
+            const latestSave = GameState.getLatestSave();
+            
+            if (!latestSave) {
+                Toast.error('找不到存檔');
+                return;
+            }
+
+            LoadingScreen.show('載入存檔中...');
+            
+            setTimeout(() => {
+                const success = GameState.load(latestSave.id);
+                
+                if (success) {
+                    LoadingScreen.hide();
+                    Toast.success('存檔載入成功！');
+                    
+                    // 跳轉到遊戲畫面
+                    setTimeout(() => {
+                        window.location.href = '/game-main.html';
+                    }, 800);
+                } else {
+                    LoadingScreen.hide();
+                    Toast.error('存檔載入失敗');
+                }
+            }, 1500);
+        },
+
+        // 顯示夥伴圖鑑
+        showPartnerGallery() {
+            Toast.show('夥伴圖鑑功能開發中...', 2000);
+            // TODO: 顯示夥伴圖鑑畫面
+        },
+
+        // 顯示成就殿堂
+        showAchievements() {
+            Toast.show('成就殿堂功能開發中...', 2000);
+            // TODO: 顯示成就殿堂畫面
+        },
+
+        // 顯示設定
+        showSettings() {
+            Toast.show('設定功能開發中...', 2000);
+            // TODO: 顯示設定畫面
+        },
+
+        // 初始化下雨動畫
+        initRain() {
+            const rainContainer = document.getElementById('rain');
+            const dropCount = 100; // 雨滴數量
+
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'raindrop';
+                
+                // 隨機位置
+                drop.style.left = Math.random() * 100 + '%';
+                
+                // 隨機延遲
+                drop.style.animationDelay = Math.random() * 2 + 's';
+                
+                // 隨機持續時間
+                drop.style.animationDuration = (Math.random() * 1 + 1) + 's';
+                
+                // 隨機透明度
+                drop.style.opacity = Math.random() * 0.5 + 0.3;
+                
+                rainContainer.appendChild(drop);
+            }
+        }
+    };
+
+    // 頁面載入完成後初始化
+    document.addEventListener('DOMContentLoaded', () => {
+        menuController.init();
+    });
+    </script>
+</body>
+</html>
