@@ -36,15 +36,10 @@
         }
         
         /* ========== 動畫 ========== */
-        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes slideUpPanel { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes slideDownPanel { from { transform: translateY(0); } to { transform: translateY(100%); } }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px var(--gold-glow); } 50% { box-shadow: 0 0 40px var(--gold-glow), 0 0 60px rgba(212, 175, 55, 0.1); } }
-        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        
-        .gold-text { color: var(--gold); text-shadow: 0 0 10px rgba(212,175,55,0.3); }
+        @keyframes glow { 
+            0%, 100% { box-shadow: 0 0 20px var(--gold-glow); } 
+            50% { box-shadow: 0 0 40px var(--gold-glow), 0 0 60px rgba(212, 175, 55, 0.1); } 
+        }
         
         /* ========== 遊戲主畫面 ========== */
         #game-screen {
@@ -56,7 +51,7 @@
             z-index: 100;
         }
         
-        /* 頂部頭條欄 */
+        /* 頂部資源欄 */
         .game-header {
             display: flex;
             justify-content: space-between;
@@ -196,7 +191,7 @@
             font-weight: 700;
         }
         
-        /* ========== 底部功能欄（Desktop - 始終可見）========== */
+        /* ========== 底部功能欄 ========== */
         .game-footer {
             display: flex;
             justify-content: flex-start;
@@ -265,6 +260,19 @@
             filter: grayscale(0%);
             text-shadow: 0 0 12px rgba(212,175,55,0.5);
         }
+
+        .foot-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .foot-btn:disabled:hover {
+            background: transparent;
+        }
+
+        .foot-btn:disabled .icon {
+            transform: none;
+        }
         
         .foot-btn .badge {
             position: absolute;
@@ -276,6 +284,16 @@
             padding: 2px 5px;
             border-radius: 10px;
             font-weight: 700;
+        }
+
+        .foot-btn .label {
+            font-size: 10px;
+        }
+
+        .foot-btn .disabled-hint {
+            font-size: 8px;
+            color: #666;
+            margin-top: 2px;
         }
         
         /* ========== 右側快捷欄 ========== */
@@ -311,7 +329,7 @@
             box-shadow: 0 8px 25px rgba(212,175,55,0.3);
         }
         
-        /* ========== 功能面板（Drawer & Modal）========== */
+        /* ========== 功能面板（統一容器）========== */
         .panel-overlay {
             display: none;
             position: fixed;
@@ -333,7 +351,6 @@
             z-index: 201;
             display: flex;
             flex-direction: column;
-            animation: slideUpPanel 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow: hidden;
             touch-action: none;
         }
@@ -373,144 +390,7 @@
         .panel-content {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
-        }
-        
-        .panel-drag-handle {
-            width: 40px;
-            height: 4px;
-            background: rgba(212,175,55,0.3);
-            border-radius: 2px;
-            margin: 8px auto;
-        }
-        
-        /* ========== 基地管理系統 ========== */
-        .base-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border);
-            padding: 16px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        
-        .stat-card .label {
-            font-size: 11px;
-            color: var(--gray);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-        
-        .stat-card .value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 4px;
-        }
-        
-        .stat-card .detail {
-            font-size: 10px;
-            color: var(--gray);
-        }
-        
-        .base-sections {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .section {
-            background: rgba(0,0,0,0.3);
-            border-left: 3px solid var(--gold);
-            border-radius: 0 10px 10px 0;
-            padding: 16px;
-        }
-        
-        .section h4 {
-            font-size: 14px;
-            color: var(--gold);
-            margin-bottom: 12px;
-            font-family: 'Noto Serif TC', serif;
-            letter-spacing: 1px;
-        }
-        
-        .building-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .building-item {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(212,175,55,0.2);
-            padding: 12px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .building-item:hover {
-            background: rgba(212,175,55,0.1);
-            border-color: var(--gold);
-        }
-        
-        .building-info {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        
-        .building-icon {
-            font-size: 24px;
-        }
-        
-        .building-detail {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        
-        .building-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-        }
-        
-        .building-meta {
-            font-size: 10px;
-            color: var(--gray);
-        }
-        
-        .building-actions {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .btn-small {
-            padding: 6px 12px;
-            background: transparent;
-            border: 1px solid var(--gold-dark);
-            color: var(--text);
-            font-size: 11px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
-        
-        .btn-small:hover {
-            background: var(--gold);
-            color: #000;
-            border-color: var(--gold);
+            padding: 0;
         }
         
         /* ========== Toast 提示 ========== */
@@ -531,18 +411,11 @@
             box-shadow: 0 0 30px rgba(212,175,55,0.3);
         }
         .toast.show { opacity: 1; }
+        .toast.success { border-color: #27ae60; }
+        .toast.error { border-color: #e74c3c; }
+        .toast.warning { border-color: #f39c12; }
         
         /* ========== 響應式設計 ========== */
-        @media (max-width: 1024px) {
-            .game-header { height: 52px; padding: 10px 12px; }
-            .res-item { min-width: 70px; }
-            .res-item .value { font-size: 16px; }
-            .map-grid { grid-template-columns: repeat(5, 1fr); }
-            .game-footer { height: 66px; }
-            .foot-btn { min-width: 65px; font-size: 9px; }
-            .foot-btn .icon { font-size: 20px; }
-        }
-        
         @media (max-width: 768px) {
             .game-header { height: 48px; padding: 8px 10px; gap: 8px; }
             .res-box { gap: 12px; }
@@ -559,26 +432,6 @@
             .side-btn { width: 50px; height: 50px; font-size: 20px; }
             .panel-drawer { max-height: 90vh; border-radius: 20px 20px 0 0; }
         }
-        
-        @media (max-width: 480px) {
-            .game-header { height: 44px; padding: 6px 8px; gap: 6px; }
-            .res-box { gap: 8px; }
-            .res-item { min-width: 50px; }
-            .res-item .label { font-size: 7px; }
-            .res-item .value { font-size: 12px; }
-            .day-box { font-size: 11px; padding: 4px 8px; }
-            .header-btn { width: 32px; height: 32px; font-size: 14px; }
-            .map-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
-            .grid-cell { min-height: 45px; font-size: 20px; }
-            .game-footer { height: 58px; padding: 4px 6px; }
-            .foot-btn { max-width: 55px; font-size: 7px; gap: 2px; padding: 4px 6px; }
-            .foot-btn .icon { font-size: 16px; }
-            .foot-btn .label { display: none; }
-            .side-actions { right: 8px; bottom: 64px; }
-            .side-btn { width: 44px; height: 44px; font-size: 18px; }
-            .panel-drawer { max-height: 95vh; border-radius: 16px 16px 0 0; }
-            .base-stats { grid-template-columns: repeat(2, 1fr); }
-        }
     </style>
 </head>
 <body>
@@ -592,15 +445,15 @@
             <div class="res-box">
                 <div class="res-item">
                     <span class="label">資金</span>
-                    <span class="value" id="res-money">$50,000</span>
+                    <span class="value" id="res-money">$0</span>
                 </div>
                 <div class="res-item">
                     <span class="label">人手</span>
-                    <span class="value" id="res-crew">5</span>
+                    <span class="value" id="res-crew">0</span>
                 </div>
                 <div class="res-item">
                     <span class="label">聲望</span>
-                    <span class="value" id="res-rep">150</span>
+                    <span class="value" id="res-rep">0</span>
                 </div>
             </div>
             
@@ -609,7 +462,8 @@
             </div>
             
             <div class="header-btns">
-                <button class="header-btn" onclick="toggleSettings()">⚙️</button>
+                <button class="header-btn" onclick="gameController.quickSave()" title="快速存檔">💾</button>
+                <button class="header-btn" onclick="gameController.backToMenu()" title="返回主選單">🏠</button>
             </div>
         </div>
         
@@ -620,514 +474,332 @@
             </div>
         </div>
         
-        <!-- 底部功能欄 -->
+        <!-- 底部功能欄（10個按鈕）-->
         <div class="game-footer">
-            <button class="foot-btn active" data-key="1" onclick="showPanel('base')">
+            <button class="foot-btn active" data-panel="base" onclick="panelController.show('base')">
                 <span class="icon">🏰</span>
-                基地
-                <span class="badge">3</span>
+                <span class="label">基地</span>
             </button>
-            <button class="foot-btn" data-key="2" onclick="showPanel('faction')">
+            <button class="foot-btn" data-panel="faction" onclick="panelController.show('faction')">
                 <span class="icon">⚔️</span>
-                派系
-                <span class="badge">2</span>
+                <span class="label">派系</span>
             </button>
-            <button class="foot-btn" data-key="3" onclick="showPanel('harem')">
+            <button class="foot-btn" data-panel="harem" onclick="panelController.show('harem')">
                 <span class="icon">💃</span>
-                後宮
+                <span class="label">後宮</span>
             </button>
-            <button class="foot-btn" data-key="4" onclick="showPanel('partners')">
+            <button class="foot-btn" data-panel="partners" onclick="panelController.show('partners')">
                 <span class="icon">👥</span>
-                夥伴
+                <span class="label">夥伴</span>
             </button>
-            <button class="foot-btn" data-key="5" onclick="showPanel('team')">
+            <button class="foot-btn" data-panel="team" onclick="panelController.show('team')">
                 <span class="icon">🎯</span>
-                隊伍
+                <span class="label">隊伍</span>
             </button>
-            <button class="foot-btn" data-key="6" onclick="showPanel('gang')">
+            <button class="foot-btn" data-panel="gang" onclick="panelController.show('gang')" disabled>
                 <span class="icon">👑</span>
-                幫會
+                <span class="label">幫會</span>
+                <span class="disabled-hint">多人</span>
             </button>
-            <button class="foot-btn" data-key="7" onclick="showPanel('world')">
+            <button class="foot-btn" data-panel="world" onclick="panelController.show('world')" disabled>
                 <span class="icon">🌍</span>
-                世界
-                <span class="badge">!</span>
+                <span class="label">世界</span>
+                <span class="disabled-hint">多人</span>
             </button>
-            <button class="foot-btn" data-key="8" onclick="showPanel('saves')">
+            <button class="foot-btn" data-panel="saves" onclick="panelController.show('saves')">
                 <span class="icon">📁</span>
-                存檔
+                <span class="label">存檔</span>
             </button>
-            <button class="foot-btn" data-key="9" onclick="showPanel('settings')">
+            <button class="foot-btn" data-panel="settings" onclick="panelController.show('settings')">
                 <span class="icon">⚙️</span>
-                設定
+                <span class="label">設定</span>
             </button>
-            <button class="foot-btn" data-key="0" onclick="showPanel('help')">
+            <button class="foot-btn" data-panel="help" onclick="panelController.show('help')">
                 <span class="icon">❓</span>
-                幫助
+                <span class="label">幫助</span>
             </button>
         </div>
         
         <!-- 右側快捷欄 -->
         <div class="side-actions">
-            <button class="side-btn" onclick="toggleChat()">
-                💬
-            </button>
-            <button class="side-btn" onclick="nextTurn()">
+            <button class="side-btn" onclick="gameController.nextTurn()">
                 ⏭️
             </button>
         </div>
     </div>
 
     <!-- 面板遮罩 -->
-    <div id="panel-overlay" class="panel-overlay" onclick="closePanel()"></div>
+    <div id="panel-overlay" class="panel-overlay" onclick="panelController.close()"></div>
 
-    <!-- 基地管理面板 -->
-    <div id="base-panel" class="panel-drawer" style="display:none;">
-        <div class="panel-drag-handle"></div>
+    <!-- 統一面板容器 -->
+    <div id="panel-drawer" class="panel-drawer" style="display:none;">
         <div class="panel-header">
-            <h3>🏰 基地管理</h3>
-            <button class="panel-close-btn" onclick="closePanel()">✕</button>
+            <h3 id="panel-title">面板</h3>
+            <button class="panel-close-btn" onclick="panelController.close()">✕</button>
         </div>
-        <div class="panel-content">
-            <div class="base-stats">
-                <div class="stat-card">
-                    <div class="label">基地等級</div>
-                    <div class="value">Lv. 5</div>
-                    <div class="detail">升級進度: 80%</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">日產量</div>
-                    <div class="value">$8,500</div>
-                    <div class="detail">基礎+特殊</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">防禦值</div>
-                    <div class="value">450</div>
-                    <div class="detail">+20 本週</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">容納人數</div>
-                    <div class="value">45 / 50</div>
-                    <div class="detail">近似滿員</div>
-                </div>
-            </div>
-            
-            <div class="base-sections">
-                <div class="section">
-                    <h4>🏢 設施管理</h4>
-                    <div class="building-list">
-                        <div class="building-item">
-                            <div class="building-info">
-                                <div class="building-icon">🏪</div>
-                                <div class="building-detail">
-                                    <div class="building-name">便利商店</div>
-                                    <div class="building-meta">Lv.3 | 收益: $400/天</div>
-                                </div>
-                            </div>
-                            <div class="building-actions">
-                                <button class="btn-small" onclick="upgradeBuilding('shop')">升級</button>
-                            </div>
-                        </div>
-                        
-                        <div class="building-item">
-                            <div class="building-info">
-                                <div class="building-icon">🎤</div>
-                                <div class="building-detail">
-                                    <div class="building-name">KTV</div>
-                                    <div class="building-meta">Lv.2 | 收益: $600/天</div>
-                                </div>
-                            </div>
-                            <div class="building-actions">
-                                <button class="btn-small" onclick="upgradeBuilding('ktv')">升級</button>
-                            </div>
-                        </div>
-                        
-                        <div class="building-item">
-                            <div class="building-info">
-                                <div class="building-icon">🏥</div>
-                                <div class="building-detail">
-                                    <div class="building-name">醫療室</div>
-                                    <div class="building-meta">Lv.1 | 特殊建築</div>
-                                </div>
-                            </div>
-                            <div class="building-actions">
-                                <button class="btn-small" onclick="upgradeBuilding('hospital')">升級</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <h4>👥 人事管理</h4>
-                    <div class="building-list">
-                        <div class="building-item">
-                            <div class="building-info">
-                                <div class="building-icon">📊</div>
-                                <div class="building-detail">
-                                    <div class="building-name">員工總數</div>
-                                    <div class="building-meta">45人 | 忠誠度: 78%</div>
-                                </div>
-                            </div>
-                            <div class="building-actions">
-                                <button class="btn-small">查看</button>
-                            </div>
-                        </div>
-                        
-                        <div class="building-item">
-                            <div class="building-info">
-                                <div class="building-icon">⚠️</div>
-                                <div class="building-detail">
-                                    <div class="building-name">待遇調整</div>
-                                    <div class="building-meta">3人 | 低於平均</div>
-                                </div>
-                            </div>
-                            <div class="building-actions">
-                                <button class="btn-small">處理</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <h4>🛡️ 防禦措施</h4>
-                    <div class="building-list">
-                        <div class="building-item">
-                            <div class="building-info">
-                                <div class="building-icon">🚨</div>
-                                <div class="building-detail">
-                                    <div class="building-name">警報系統</div>
-                                    <div class="building-meta">Lv.2 | 已啟用</div>
-                                </div>
-                            </div>
-                            <div class="building-actions">
-                                <button class="btn-small">設定</button>
-                            </div>
-                        </div>
-                        
-                        <div class="building-item">
-                            <div class="building-info">
-                                <div class="building-icon">🔐</div>
-                                <div class="building-detail">
-                                    <div class="building-name">安全防衛</div>
-                                    <div class="building-meta">下次檢修: 3天後</div>
-                                </div>
-                            </div>
-                            <div class="building-actions">
-                                <button class="btn-small">維護</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="panel-content" id="panel-content">
+            <!-- 動態載入內容 -->
         </div>
     </div>
 
-    <!-- 派系面板 -->
-    <div id="faction-panel" class="panel-drawer" style="display:none;">
-        <div class="panel-drag-handle"></div>
-        <div class="panel-header">
-            <h3>⚔️ 派系</h3>
-            <button class="panel-close-btn" onclick="closePanel()">✕</button>
-        </div>
-        <div class="panel-content">
-            派系功能開發中...
-        </div>
-    </div>
+    <!-- ========== 載入所有模組（按順序）========== -->
+    
+    <!-- 1. 核心數據層 -->
+    <script src="/static/core/game-state.js"></script>
+    
+    <!-- 2. 共享 UI 工具 -->
+    <script src="/static/ui/shared-ui.js"></script>
+    
+    <!-- 3. 遊戲數據 -->
+    <script src="/static/routes-data.js"></script>
+    <script src="/static/core-partners-20.js"></script>
+    <script src="/static/partner-data.js"></script>
+    <script src="/static/achievements-24.js"></script>
+    <script src="/static/ai-personality.js"></script>
+    
+    <!-- 4. 功能模組 -->
+    <script src="/static/modules/base-system.js"></script>
+    <script src="/static/modules/harem-system.js"></script>
+    <script src="/static/modules/partner-system.js"></script>
+    
+    <!-- 5. UI 模組 -->
+    <script src="/static/modules/faction-ui.js"></script>
+    <script src="/static/modules/team-ui.js"></script>
+    <script src="/static/modules/save-ui.js"></script>
+    <script src="/static/modules/settings-ui.js"></script>
+    <script src="/static/modules/help-ui.js"></script>
 
-    <!-- 後宮面板 -->
-    <div id="harem-panel" class="panel-drawer" style="display:none;">
-        <div class="panel-drag-handle"></div>
-        <div class="panel-header">
-            <h3>💃 後宮</h3>
-            <button class="panel-close-btn" onclick="closePanel()">✕</button>
-        </div>
-        <div class="panel-content" id="harem-content">
-            後宮功能開發中...
-        </div>
-    </div>
-
-    <!-- 夥伴面板 -->
-    <div id="partners-panel" class="panel-drawer" style="display:none;">
-        <div class="panel-drag-handle"></div>
-        <div class="panel-header">
-            <h3>👥 夥伴</h3>
-            <button class="panel-close-btn" onclick="closePanel()">✕</button>
-        </div>
-        <div class="panel-content" id="partners-grid">
-            夥伴功能開發中...
-        </div>
-    </div>
-
-    <!-- 隊伍面板 -->
-    <div id="team-panel" class="panel-drawer" style="display:none;">
-        <div class="panel-drag-handle"></div>
-        <div class="panel-header">
-            <h3>🎯 隊伍</h3>
-            <button class="panel-close-btn" onclick="closePanel()">✕</button>
-        </div>
-        <div class="panel-content">
-            隊伍功能開發中...
-        </div>
-    </div>
-
-    <!-- 幫會面板 -->
-    <div id="gang-panel" class="panel-drawer" style="display:none;">
-        <div class="panel-drag-handle"></div>
-        <div class="panel-header">
-            <h3>👑 幫會</h3>
-            <button class="panel-close-btn" onclick="closePanel()">✕</button>
-        </div>
-        <div class="panel-content">
-            幫會功能開發中...
-        </div>
-    </div>
-
-    <!-- 世界面板 -->
-    <div id="world-panel" class="panel-drawer" style="display:none;">
-        <div class="panel-drag-handle"></div>
-        <div class="panel-header">
-            <h3>🌍 世界</h3>
-            <button class="panel-close-btn" onclick="closePanel()">✕</button>
-        </div>
-        <div class="panel-content">
-            世界功能開發中...
-        </div>
-    </div>
-
-    <!-- 存檔面板 -->
-    <div id="saves-panel" class="panel-drawer" style="display:none;">
-        <div class="panel-drag-handle"></div>
-        <div class="panel-header">
-            <h3>📁 存檔</h3>
-            <button class="panel-close-btn" onclick="closePanel()">✕</button>
-        </div>
-        <div class="panel-content">
-            存檔功能開發中...
-        </div>
-    </div>
-
-    <!-- 設定面板 -->
-    <div id="settings-panel" class="panel-drawer" style="display:none;">
-        <div class="panel-drag-handle"></div>
-        <div class="panel-header">
-            <h3>⚙️ 設定</h3>
-            <button class="panel-close-btn" onclick="closePanel()">✕</button>
-        </div>
-        <div class="panel-content">
-            設定功能開發中...
-        </div>
-    </div>
-
-    <!-- 幫助面板 -->
-    <div id="help-panel" class="panel-drawer" style="display:none;">
-        <div class="panel-drag-handle"></div>
-        <div class="panel-header">
-            <h3>❓ 幫助</h3>
-            <button class="panel-close-btn" onclick="closePanel()">✕</button>
-        </div>
-        <div class="panel-content">
-            幫助功能開發中...
-        </div>
-    </div>
-
+    <!-- 6. 遊戲主控制器 -->
     <script>
-// ========== 系統變數 ==========
-let currentPanel = null;
+    // ========== 遊戲主控制器 ==========
+    const gameController = {
+        init() {
+            console.log('[GameController] 初始化遊戲畫面');
+            
+            // 檢查是否有遊戲數據
+            if (!GameState.current.gangName) {
+                Toast.error('找不到遊戲數據，返回主選單');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+                return;
+            }
 
-const gameData = {
-    money: 50000,
-    crew: 5,
-    reputation: 150,
-    day: 1,
-    grid: []
-};
+            // 初始化所有系統
+            baseSystem.init();
+            haremSystem.init();
+            partnerSystem.init();
+            factionUI.init();
+            teamUI.init();
+            saveUI.init();
+            settingsUI.init();
+            helpUI.init();
 
-// 建築類型
-const buildingTypes = {
-    'hq': { icon: '🏰', name: '總部', lv: 1 },
-    'shop': { icon: '🏪', name: '便利商店', lv: 3 },
-    'ktv': { icon: '🎤', name: 'KTV', lv: 2 },
-    'hospital': { icon: '🏥', name: '醫療室', lv: 1 },
-};
+            // 渲染地圖
+            this.renderMap();
+            
+            // 更新頭部資源
+            this.updateHeader();
 
-// ========== Toast 系統 ==========
-function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
-}
+            // 顯示歡迎訊息
+            Toast.success(`歡迎回來，${GameState.current.gangName}！`);
 
-// ========== 面板控制 ==========
-function showPanel(panelName) {
-    closePanel();
-    
-    currentPanel = panelName;
-    
-    const overlay = document.getElementById('panel-overlay');
-    const panel = document.getElementById(panelName + '-panel');
-    
-    overlay.style.display = 'block';
-    if (panel) {
-        panel.style.display = 'flex';
-    }
-    
-    // 標記活躍按鈕
-    document.querySelectorAll('.foot-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector(`[data-key="${getPanelKey(panelName)}"]`)?.classList.add('active');
-}
+            console.log('[GameController] 遊戲畫面初始化完成');
+        },
 
-function getPanelKey(panelName) {
-    const keys = {
-        'base': '1',
-        'faction': '2',
-        'harem': '3',
-        'partners': '4',
-        'team': '5',
-        'gang': '6',
-        'world': '7',
-        'saves': '8',
-        'settings': '9',
-        'help': '0'
+        // 渲染地圖
+        renderMap() {
+            const grid = document.getElementById('map-grid');
+            if (!grid) return;
+
+            grid.innerHTML = GameState.current.grid.map((cell, index) => {
+                const building = baseSystem.getBuildingType(cell.type);
+                const icon = building.icon;
+                const isHQ = cell.type === 'hq';
+                
+                return `
+                    <div class="grid-cell ${isHQ ? 'hq' : ''}" onclick="gameController.clickCell(${index})">
+                        ${icon}
+                        ${cell.level > 0 ? `<div class="lv">Lv.${cell.level}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        },
+
+        // 點擊格子
+        clickCell(index) {
+            const cell = GameState.current.grid[index];
+            if (!cell) return;
+
+            if (cell.type === 'empty') {
+                Toast.show('建築功能開發中...', 1500);
+            } else {
+                Toast.show(`${baseSystem.getBuildingType(cell.type).name} Lv.${cell.level}`, 1500);
+            }
+        },
+
+        // 更新頭部資源
+        updateHeader() {
+            document.getElementById('res-money').textContent = formatMoney(GameState.current.money);
+            document.getElementById('res-crew').textContent = GameState.current.crew;
+            document.getElementById('res-rep').textContent = GameState.current.reputation;
+            document.getElementById('game-day').textContent = GameState.current.day;
+        },
+
+        // 下一回合
+        nextTurn() {
+            GameState.current.day++;
+            
+            // 計算日收益
+            const dailyIncome = baseSystem.calculateDailyIncome();
+            GameState.current.money += dailyIncome;
+            
+            // 計算聲望增長
+            GameState.current.reputation += 5;
+
+            // 自動存檔
+            GameState.autoSave();
+
+            // 更新 UI
+            this.updateHeader();
+
+            Toast.success(`第 ${GameState.current.day} 天 | +$${dailyIncome.toLocaleString()}`);
+        },
+
+        // 快速存檔
+        quickSave() {
+            const saveData = GameState.save(`快速存檔 - ${GameState.current.gangName}`);
+            if (saveData) {
+                Toast.success('快速存檔成功！');
+            } else {
+                Toast.error('快速存檔失敗');
+            }
+        },
+
+        // 返回主選單
+        backToMenu() {
+            showConfirm('返回主選單將自動存檔，確定要繼續嗎？', () => {
+                GameState.autoSave();
+                window.location.href = '/';
+            });
+        }
     };
-    return keys[panelName] || '';
-}
 
-function closePanel() {
-    const overlay = document.getElementById('panel-overlay');
-    const panels = document.querySelectorAll('.panel-drawer');
-    
-    overlay.style.display = 'none';
-    panels.forEach(p => p.style.display = 'none');
-    
-    document.querySelectorAll('.foot-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    
-    currentPanel = null;
-}
+    // ========== 面板控制器 ==========
+    const panelController = {
+        currentPanel: null,
 
-// 拖動關閉面板（手機）
-let touchStartY = 0;
-document.addEventListener('touchstart', (e) => {
-    const drawer = document.querySelector('.panel-drawer[style*="flex"]');
-    if (drawer) touchStartY = e.touches[0].clientY;
-});
+        // 顯示面板
+        show(panelName) {
+            console.log('[PanelController] 顯示面板:', panelName);
 
-document.addEventListener('touchmove', (e) => {
-    const drawer = document.querySelector('.panel-drawer[style*="flex"]');
-    if (!drawer) return;
-    
-    const touchY = e.touches[0].clientY;
-    const diff = touchY - touchStartY;
-    
-    if (diff > 50) {
-        closePanel();
-    }
-});
+            this.currentPanel = panelName;
 
-// ========== 遊戲邏輯 ==========
-function initGame() {
-    // 生成 6×6 地圖
-    for (let i = 0; i < 36; i++) {
-        const cell = { type: 'empty', lv: 0 };
-        
-        if (i === 9) { // 中心設為總部
-            cell.type = 'hq';
-            cell.lv = 1;
-        } else if (i === 1) {
-            cell.type = 'shop';
-            cell.lv = 3;
-        } else if (i === 13) {
-            cell.type = 'ktv';
-            cell.lv = 2;
-        } else if (i === 12) {
-            cell.type = 'hospital';
-            cell.lv = 1;
+            // 顯示遮罩和面板
+            document.getElementById('panel-overlay').style.display = 'block';
+            document.getElementById('panel-drawer').style.display = 'flex';
+
+            // 更新標題
+            const titles = {
+                'base': '🏰 基地管理',
+                'faction': '⚔️ 派系關係',
+                'harem': '💃 私人後宮',
+                'partners': '👥 夥伴管理',
+                'team': '🎯 隊伍編組',
+                'gang': '👑 幫會系統',
+                'world': '🌍 世界地圖',
+                'saves': '📁 存檔管理',
+                'settings': '⚙️ 設定',
+                'help': '❓ 幫助'
+            };
+            document.getElementById('panel-title').textContent = titles[panelName] || '面板';
+
+            // 渲染對應模組內容
+            const content = document.getElementById('panel-content');
+            content.innerHTML = ''; // 清空
+
+            switch(panelName) {
+                case 'base':
+                    baseSystem.renderBasePanel('panel-content');
+                    break;
+                case 'faction':
+                    factionUI.render('panel-content');
+                    break;
+                case 'harem':
+                    haremSystem.renderHaremPanel('panel-content');
+                    break;
+                case 'partners':
+                    partnerSystem.renderPartnerList('panel-content');
+                    break;
+                case 'team':
+                    teamUI.render('panel-content');
+                    break;
+                case 'gang':
+                    content.innerHTML = '<div style="padding:20px;text-align:center;color:#888;">👑 幫會系統需要多人模式<br>敬請期待</div>';
+                    break;
+                case 'world':
+                    content.innerHTML = '<div style="padding:20px;text-align:center;color:#888;">🌍 世界地圖需要多人模式<br>敬請期待</div>';
+                    break;
+                case 'saves':
+                    saveUI.render('panel-content');
+                    break;
+                case 'settings':
+                    settingsUI.render('panel-content');
+                    break;
+                case 'help':
+                    helpUI.render('panel-content');
+                    break;
+                default:
+                    content.innerHTML = '<div style="padding:20px;text-align:center;color:#888;">功能開發中...</div>';
+            }
+
+            // 更新按鈕狀態
+            this.updateButtonStates();
+        },
+
+        // 關閉面板
+        close() {
+            document.getElementById('panel-overlay').style.display = 'none';
+            document.getElementById('panel-drawer').style.display = 'none';
+            this.currentPanel = null;
+            this.updateButtonStates();
+        },
+
+        // 更新按鈕狀態
+        updateButtonStates() {
+            document.querySelectorAll('.foot-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.panel === this.currentPanel) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+    };
+
+    // ========== 鍵盤快捷鍵 ==========
+    document.addEventListener('keydown', (e) => {
+        // ESC 關閉面板
+        if (e.key === 'Escape') {
+            panelController.close();
         }
         
-        gameData.grid.push(cell);
-    }
-    
-    renderMap();
-}
+        // 數字鍵 1-9, 0
+        if (e.key >= '0' && e.key <= '9') {
+            const panels = ['help', 'base', 'faction', 'harem', 'partners', 'team', 'gang', 'world', 'saves', 'settings'];
+            const panelName = panels[parseInt(e.key)];
+            if (panelName) panelController.show(panelName);
+        }
+        
+        // N 下一回合
+        if (e.key === 'n' || e.key === 'N') {
+            gameController.nextTurn();
+        }
+    });
 
-function renderMap() {
-    const grid = document.getElementById('map-grid');
-    grid.innerHTML = gameData.grid.map((cell, i) => {
-        const building = buildingTypes[cell.type];
-        const icon = building ? building.icon : '⬜';
-        return `
-            <div class="grid-cell ${cell.type === 'hq' ? 'hq' : ''}" onclick="clickCell(${i})">
-                ${icon}
-                ${cell.lv > 0 ? `<div class="lv">Lv.${cell.lv}</div>` : ''}
-            </div>
-        `;
-    }).join('');
-}
-
-function clickCell(index) {
-    showToast(`點擊格子 #${index}`);
-}
-
-function nextTurn() {
-    gameData.day++;
-    gameData.money += 5000;
-    gameData.reputation += 5;
-    updateHeader();
-    showToast(`進入第 ${gameData.day} 天 | +$5,000`);
-}
-
-function updateHeader() {
-    document.getElementById('res-money').textContent = `$${gameData.money.toLocaleString()}`;
-    document.getElementById('res-crew').textContent = gameData.crew;
-    document.getElementById('res-rep').textContent = gameData.reputation;
-    document.getElementById('game-day').textContent = gameData.day;
-}
-
-function toggleChat() {
-    showToast('聊天功能開發中...');
-}
-
-function toggleSettings() {
-    showPanel('settings');
-}
-
-function upgradeBuilding(type) {
-    showToast(`升級 ${buildingTypes[type]?.name || '設施'} 中...`);
-}
-
-// ========== 鍵盤快捷鍵 ==========
-document.addEventListener('keydown', (e) => {
-    // 數字鍵 1-9, 0
-    if (e.key >= '0' && e.key <= '9') {
-        const panels = ['help', 'base', 'faction', 'harem', 'partners', 'team', 'gang', 'world', 'saves', 'settings'];
-        const panelName = panels[parseInt(e.key)];
-        if (panelName) showPanel(panelName);
-    }
-    
-    // ESC 關閉面板
-    if (e.key === 'Escape') {
-        closePanel();
-    }
-    
-    // M 打開聊天
-    if (e.key === 'm' || e.key === 'M') {
-        toggleChat();
-    }
-    
-    // N 下一回合
-    if (e.key === 'n' || e.key === 'N') {
-        nextTurn();
-    }
-});
-
-// ========== 初始化 ==========
-document.addEventListener('DOMContentLoaded', () => {
-    initGame();
-});
+    // ========== 初始化 ==========
+    document.addEventListener('DOMContentLoaded', () => {
+        gameController.init();
+    });
     </script>
 </body>
 </html>
