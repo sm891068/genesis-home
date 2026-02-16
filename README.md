@@ -1,21 +1,192 @@
-```txt
-npm install
-npm run dev
+# 黑道建築 Underworld Architect
+
+## 項目概述
+- **名稱**: 黑道建築 Underworld Architect
+- **類型**: 網頁經營模擬遊戲
+- **技術**: Hono + TypeScript + Cloudflare Pages
+- **風格**: 黑金美學 + 黑道題材
+
+## 功能特色
+
+### 已完成功能
+1. **主選單系統**
+   - 雨幕+閃電動畫效果
+   - 黑金配色主題
+   - 完整的菜單選項
+
+2. **遊戲流程**
+   - 父親對話載入畫面（12句台詞）
+   - 四路線選擇系統（A/B/C/D）
+   - 組織命名系統
+
+3. **遊戲核心**
+   - 6x6 建築地圖系統
+   - 建設/升級機制
+   - 資源管理（資金/人手/聲望）
+   - 回合制收入系統
+
+4. **成就系統**
+   - 成就殿堂（已解鎖/進行中/未解鎖）
+   - 成就篩選（故事/經濟/建築/夥伴）
+   - 進度條可視化
+
+5. **排行榜系統**
+   - 榮耀殿堂
+   - 三種排行榜（全時代/本月/本週）
+   - 前三名特殊樣式
+
+6. **圖鑑系統**
+   - 夥伴圖鑑（黑道/女王/少爺）
+   - 解鎖狀態顯示
+
+7. **存檔系統**
+   - LocalStorage 本地存檔
+   - 多存檔槽位支持
+   - 快速存檔功能
+
+8. **設定系統**
+   - 音效/遊戲/介面設定
+   - 數據清除功能
+
+## 數據模型
+
+### 遊戲數據結構
+```javascript
+gameData = {
+  route: 'A/B/C/D',
+  routeName: '路線名稱',
+  gangName: '組織名稱',
+  money: 10000,
+  day: 1,
+  reputation: 50,
+  grid: [], // 36格地圖
+  partners: [], // 夥伴列表
+  currentSaveId: null,
+  diary: []
+}
 ```
 
-```txt
+### 建築類型
+- 🏰 總部（指揮中心）
+- 🏪 便利商店（穩定收入）
+- 🏠 住宅（人口上限）
+- 🏭 工廠（高收入）
+- 🏨 酒店（高級客戶）
+- 🚉 車站（移動速度）
+- 🏥 醫療站（治療）
+- 🎤 KTV（情報）
+- 🎰 賭場（高風險高收入）
+
+### 四大路線
+1. **A - 道義路線**: 聲望+15｜正義夥伴易招募
+2. **B - 資本路線**: 資金+$8,000｜收益+15%
+3. **C - 聲望路線**: 忠誠+20%｜談判+25%
+4. **D - 魅力路線**: 異性談判+35%｜KTV收益+50%
+
+## 使用指南
+
+### 開發環境
+```bash
+# 安裝依賴
+npm install
+
+# 本地開發
+npm run dev
+
+# 構建
+npm run build
+
+# PM2 啟動（沙盒環境）
+pm2 start ecosystem.config.cjs
+```
+
+### 生產部署
+```bash
+# 部署到 Cloudflare Pages
 npm run deploy
 ```
 
-[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
+## URLs
+- **開發環境**: http://localhost:3000
+- **生產環境**: （待部署）
 
-```txt
-npm run cf-typegen
-```
+## 音樂資源
+- **主選單BGM**: Dark cinematic mafia theme (60秒循環)
+  - 風格：黑色電影 + 黑幫氛圍
+  - 節奏：65 BPM
+  - 調性：D Minor
+  - 下載：[main_menu_bgm.mp3](https://www.genspark.ai/api/files/s/E9KlmJXR)
 
-Pass the `CloudflareBindings` as generics when instantiation `Hono`:
+## 美術設計
 
-```ts
-// src/index.ts
-const app = new Hono<{ Bindings: CloudflareBindings }>()
-```
+### 色彩系統
+- **主色調**: 黑金配色（#d4af37）
+- **背景**: 深紫黑漸變（#0a0e27 - #1a1f3a）
+- **強調色**: 紅（危險）/ 藍（信息）/ 紫（神秘）/ 綠（正義）
+
+### 動畫效果
+- 多層次發光（glow）
+- 邊框流光（borderGlow）
+- 浮動效果（float）
+- 滑入動畫（slideUp/slideDown）
+- 雨幕+閃電背景
+
+## 未實現功能
+
+### 遊戲核心
+- [ ] 基地內部系統
+- [ ] 後宮系統
+- [ ] 夥伴詳細面板
+- [ ] 編制/戰鬥系統
+- [ ] 世界地圖系統
+
+### 進階功能
+- [ ] 事件系統
+- [ ] 對話系統
+- [ ] 劇情系統
+- [ ] PVP 系統
+- [ ] 公會/聯盟系統
+
+## 後續開發建議
+
+### 短期（1-2週）
+1. 完善建築系統（更多建築類型）
+2. 實現基本戰鬥系統
+3. 添加更多成就
+4. 完善夥伴系統
+
+### 中期（1個月）
+1. 實現完整事件系統
+2. 添加劇情線
+3. 音效整合
+4. 多語言支持
+
+### 長期（2-3個月）
+1. 在線排行榜
+2. 社交系統
+3. 付費內容
+4. 移動端優化
+
+## 技術細節
+
+### 存儲方式
+- LocalStorage（本地存檔）
+- 未來可整合 Cloudflare KV（雲端存檔）
+
+### 性能優化
+- CSS 變數系統
+- 動畫 GPU 加速
+- 懶加載策略
+
+## 部署狀態
+- **平台**: Cloudflare Pages
+- **狀態**: 開發中
+- **最後更新**: 2026-02-16
+
+## 版本歷史
+- **v1.0.0** (2026-02-16): 初始版本
+  - 完整主選單系統
+  - 基礎遊戲流程
+  - 建築系統
+  - 存檔系統
+  - 成就/排行榜/圖鑑系統
