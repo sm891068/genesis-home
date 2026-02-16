@@ -282,6 +282,34 @@ const ALL_PARTNERS = [
         obtainWay: 'SR卡池5%機率',
         canHarem: true
     },
+    {
+        id: 'ssr_006',
+        name: '羅奈米',
+        nickname: '小辣椒',
+        rarity: 'SSR',
+        job: 'GUNNER',
+        avatar: '🔥',
+        gender: 'female',
+        age: 18,
+        height: 166,
+        bust: 'G',
+        measurements: '95-60-88',
+        baseStats: { STR: 60, DEF: 55, AGI: 85, INT: 90, WIS: 60 },
+        activeSkill: 'BULLET_STORM',
+        passiveSkill: 'QUICK_RELOAD',
+        personality: 'tsundere', // 傲嬌
+        description: '18歲街頭小太妹，傲嬌個性，火辣身材。表面兇悍實則內心柔軟，對在意的人會展現不坦率的關心',
+        background: '從小在街頭混大，靠著天生的槍法天賦和傲人身材在地下世界闖出名堂。雖然外表強勢，但內心渴望被理解和保護。對喜歡的人會用惡言相向來掩飾害羞',
+        obtainWay: '魅力路線中期事件',
+        canHarem: true,
+        // 傲嬌專屬互動
+        tsundereLevel: {
+            cold: '哼！誰要理你這個笨蛋！',
+            warming: '我、我才沒有擔心你！只是剛好路過而已！',
+            trust: '笨蛋...其實我...算了不說了！（臉紅）',
+            love: '都怪你...讓我變成這樣...我、我喜歡你啦！笨蛋！（羞到爆）'
+        }
+    },
     
     // ===== SR 超稀有 (藍色) =====
     {

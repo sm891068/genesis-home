@@ -228,17 +228,69 @@
         </div>
     </div>
 
+    <!-- 父親對話畫面 -->
+    <div id="father-dialogue" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 40px;">
+        <div style="max-width: 800px; text-align: center;">
+            <div style="font-size: 60px; margin-bottom: 20px;">👔</div>
+            <h2 style="color: var(--gold); font-size: 32px; margin-bottom: 30px;">龍爺的遺言</h2>
+            <div id="dialogue-text" style="font-size: 20px; line-height: 2; color: var(--text); min-height: 200px; padding: 30px; background: rgba(212,175,55,0.1); border: 2px solid var(--border); border-radius: 10px;">
+            </div>
+            <div id="dialogue-timer" style="margin-top: 20px; color: var(--gray); font-size: 16px;"></div>
+        </div>
+    </div>
+
+    <!-- 六路線選擇畫面 -->
+    <div id="route-selection" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; overflow-y: auto; padding: 40px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 style="color: var(--gold); font-size: 36px; text-align: center; margin-bottom: 20px;">選擇你的道路</h2>
+            <p style="text-align: center; color: var(--gray); margin-bottom: 40px; font-size: 18px;">每條路線都有獨特的加成與挑戰</p>
+            
+            <div id="routes-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                <!-- 路線卡片將由 JavaScript 生成 -->
+            </div>
+            
+            <div style="text-align: center;">
+                <button onclick="menuController.cancelRouteSelection()" style="padding: 15px 40px; background: rgba(255,255,255,0.1); border: 2px solid var(--border); color: var(--text); font-size: 18px; cursor: pointer; border-radius: 8px; transition: all 0.3s;">
+                    ← 返回主選單
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 幫派命名畫面 -->
+    <div id="naming-screen" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1100; display: flex; align-items: center; justify-content: center;">
+        <div style="background: var(--panel); padding: 50px; border: 3px solid var(--gold); border-radius: 15px; max-width: 500px; text-align: center;">
+            <h2 style="color: var(--gold); font-size: 32px; margin-bottom: 30px;">建立你的帝國</h2>
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; color: var(--text); margin-bottom: 10px; font-size: 18px;">幫派名稱</label>
+                <input id="gang-name-input" type="text" placeholder="例如：龍門幫" maxlength="8" style="width: 100%; padding: 15px; font-size: 20px; text-align: center; background: rgba(255,255,255,0.1); border: 2px solid var(--border); color: var(--text); border-radius: 8px;" />
+            </div>
+            <div style="margin-bottom: 35px;">
+                <label style="display: block; color: var(--text); margin-bottom: 10px; font-size: 18px;">你的稱號</label>
+                <input id="player-name-input" type="text" placeholder="例如：老大" maxlength="6" style="width: 100%; padding: 15px; font-size: 20px; text-align: center; background: rgba(255,255,255,0.1); border: 2px solid var(--border); color: var(--text); border-radius: 8px;" />
+            </div>
+            <button onclick="menuController.confirmNaming()" style="padding: 18px 60px; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); border: none; color: #000; font-size: 20px; font-weight: bold; cursor: pointer; border-radius: 8px; transition: all 0.3s; box-shadow: 0 4px 15px var(--gold-glow);">
+                開始傳承 🎯
+            </button>
+            <button onclick="menuController.cancelNaming()" style="margin-top: 15px; padding: 12px 30px; background: transparent; border: 2px solid var(--border); color: var(--text); font-size: 16px; cursor: pointer; border-radius: 8px; display: block; width: 100%;">
+                取消
+            </button>
+        </div>
+    </div>
+
     <!-- 載入核心腳本 -->
     <script src="/static/core/game-state.js"></script>
     <script src="/static/ui/shared-ui.js"></script>
     <script src="/static/routes-data.js"></script>
-    <script src="/static/core-partners-20.js"></script>
     <script src="/static/partner-data.js"></script>
-    <script src="/static/achievements-24.js"></script>
+    <script src="/static/data/ai-personality.js"></script>
+    <script src="/static/data/ai-character-logic.js"></script>
 
     <script>
     // ========== 主選單控制器 ==========
     const menuController = {
+        selectedRoute: null,
+        
         init() {
             console.log('[MainMenu] 初始化主選單');
             
@@ -263,45 +315,234 @@
             }
         },
 
-        // 新遊戲
+        // 新遊戲 - 啟動父親對話
         newGame() {
-            Toast.show('正在準備新遊戲...', 1500);
-            
-            // TODO: 顯示路線選擇畫面
-            setTimeout(() => {
-                this.showRouteSelection();
-            }, 1500);
+            this.showFatherDialogue();
         },
 
-        // 顯示路線選擇（暫時跳過，直接開始）
+        // 顯示父親對話（12秒）
+        showFatherDialogue() {
+            const dialogue = document.getElementById('father-dialogue');
+            const dialogueText = document.getElementById('dialogue-text');
+            const timer = document.getElementById('dialogue-timer');
+            const mainMenu = document.getElementById('main-menu');
+            
+            // 隱藏主選單
+            mainMenu.style.display = 'none';
+            dialogue.style.display = 'flex';
+            
+            // 父親的遺言
+            const messages = [
+                '孩子，如果你看到這段影片，代表我已經不在了...',
+                '這個城市很殘酷，但記住，做人要有底線。',
+                '別碰毒品，那是底線。',
+                '錢能解決的，都不是問題。',
+                '這城市，尊重比恐懼更重要。',
+                '有美人，記得帶回家給你媽看看。',
+                '拳頭是硬道理，但腦子更重要。',
+                '我留給你的，不只是這個幫派，還有我的信念。',
+                '現在，選擇你自己的道路吧...',
+                '記住，我永遠以你為榮。'
+            ];
+            
+            let currentIndex = 0;
+            let timeLeft = 12;
+            
+            // 更新對話內容
+            const updateDialogue = () => {
+                if (currentIndex < messages.length) {
+                    dialogueText.textContent = messages[currentIndex];
+                    currentIndex++;
+                }
+            };
+            
+            // 初始顯示
+            updateDialogue();
+            
+            // 每1.2秒換一句
+            const dialogueInterval = setInterval(updateDialogue, 1200);
+            
+            // 倒計時
+            const countdownInterval = setInterval(() => {
+                timeLeft--;
+                timer.textContent = `${timeLeft} 秒後進入路線選擇...`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(dialogueInterval);
+                    clearInterval(countdownInterval);
+                    
+                    // 進入路線選擇
+                    dialogue.style.display = 'none';
+                    this.showRouteSelection();
+                }
+            }, 1000);
+        },
+
+        // 顯示路線選擇
         showRouteSelection() {
-            // 暫時使用 A 路線直接開始
-            const gangName = prompt('請輸入您的幫派名稱：', '龍門幫');
+            const routeSelection = document.getElementById('route-selection');
+            const container = document.getElementById('routes-container');
+            
+            routeSelection.style.display = 'block';
+            
+            // 生成路線卡片
+            container.innerHTML = '';
+            Object.values(ROUTES_DATA).forEach(route => {
+                const card = this.createRouteCard(route);
+                container.appendChild(card);
+            });
+        },
+
+        // 創建路線卡片
+        createRouteCard(route) {
+            const card = document.createElement('div');
+            card.style.cssText = `
+                background: linear-gradient(135deg, ${route.color}20, ${route.color}05);
+                border: 3px solid ${route.color};
+                border-radius: 15px;
+                padding: 25px;
+                cursor: pointer;
+                transition: all 0.3s;
+                position: relative;
+                overflow: hidden;
+            `;
+            
+            card.innerHTML = `
+                <div style="font-size: 48px; text-align: center; margin-bottom: 15px;">${route.icon}</div>
+                <h3 style="color: ${route.color}; font-size: 26px; text-align: center; margin-bottom: 10px;">${route.name}</h3>
+                <p style="color: var(--gray); text-align: center; font-style: italic; margin-bottom: 20px; font-size: 16px;">${route.quote}</p>
+                <p style="color: var(--text); line-height: 1.8; margin-bottom: 20px; font-size: 14px;">${route.description}</p>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <div style="color: var(--gold); font-weight: bold; margin-bottom: 10px; font-size: 16px;">起始資源</div>
+                    <div style="color: var(--text); font-size: 14px; line-height: 1.8;">
+                        💰 ${route.bonuses.money.toLocaleString()} | 
+                        🎖️ ${route.bonuses.reputation} | 
+                        👥 ${route.bonuses.crew}人
+                    </div>
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+                    <div style="color: var(--gold); font-weight: bold; margin-bottom: 10px; font-size: 16px;">特殊加成</div>
+                    <div style="color: var(--text); font-size: 13px; line-height: 1.8;">
+                        ${Object.entries(route.bonuses.special).map(([key, value]) => 
+                            `• ${key}: <span style="color: ${route.color};">${value}</span>`
+                        ).join('<br>')}
+                    </div>
+                </div>
+                
+                <button style="width: 100%; margin-top: 20px; padding: 15px; background: ${route.color}; border: none; color: #fff; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                    選擇此路線 ${route.icon}
+                </button>
+            `;
+            
+            // 懸停效果
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px)';
+                card.style.boxShadow = `0 15px 40px ${route.color}80`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = 'none';
+            });
+            
+            // 點擊選擇路線
+            card.addEventListener('click', () => {
+                this.selectRoute(route.id);
+            });
+            
+            return card;
+        },
+
+        // 選擇路線
+        selectRoute(routeId) {
+            this.selectedRoute = routeId;
+            const route = ROUTES_DATA[routeId];
+            
+            // 隱藏路線選擇
+            document.getElementById('route-selection').style.display = 'none';
+            
+            // 顯示命名畫面
+            this.showNamingScreen(route);
+        },
+
+        // 顯示命名畫面
+        showNamingScreen(route) {
+            const namingScreen = document.getElementById('naming-screen');
+            namingScreen.style.display = 'flex';
+            
+            // 設置預設值
+            document.getElementById('gang-name-input').value = '龍門幫';
+            document.getElementById('player-name-input').value = '老大';
+            
+            // 聚焦到幫派名稱輸入框
+            setTimeout(() => {
+                document.getElementById('gang-name-input').focus();
+                document.getElementById('gang-name-input').select();
+            }, 100);
+        },
+
+        // 確認命名並開始遊戲
+        confirmNaming() {
+            const gangName = document.getElementById('gang-name-input').value.trim();
+            const playerName = document.getElementById('player-name-input').value.trim();
             
             if (!gangName) {
-                Toast.warning('已取消新遊戲');
+                Toast.error('請輸入幫派名稱');
                 return;
             }
-
-            LoadingScreen.show('正在初始化遊戲...');
+            
+            if (!playerName) {
+                Toast.error('請輸入你的稱號');
+                return;
+            }
+            
+            if (gangName.length > 8) {
+                Toast.error('幫派名稱不能超過8個字');
+                return;
+            }
+            
+            if (playerName.length > 6) {
+                Toast.error('稱號不能超過6個字');
+                return;
+            }
+            
+            // 隱藏命名畫面
+            document.getElementById('naming-screen').style.display = 'none';
+            
+            // 開始遊戲
+            LoadingScreen.show('正在初始化遊戲世界...');
             
             setTimeout(() => {
-                // 開始新遊戲（路線 A）
-                const success = GameState.newGame('A', gangName, '老大');
+                const success = GameState.newGame(this.selectedRoute, gangName, playerName);
                 
                 if (success) {
                     LoadingScreen.hide();
-                    Toast.success(`歡迎來到 ${gangName}！`);
+                    const route = ROUTES_DATA[this.selectedRoute];
+                    Toast.success(`${route.icon} 歡迎來到 ${gangName}！`, 2000);
                     
                     // 跳轉到遊戲畫面
                     setTimeout(() => {
                         window.location.href = '/game-main.html';
-                    }, 1000);
+                    }, 2000);
                 } else {
                     LoadingScreen.hide();
                     Toast.error('遊戲初始化失敗');
                 }
-            }, 2000);
+            }, 1500);
+        },
+
+        // 取消命名
+        cancelNaming() {
+            document.getElementById('naming-screen').style.display = 'none';
+            this.showRouteSelection();
+        },
+
+        // 取消路線選擇
+        cancelRouteSelection() {
+            document.getElementById('route-selection').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'flex';
         },
 
         // 繼續遊戲
