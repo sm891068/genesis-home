@@ -10,5 +10,10 @@ export default defineConfig({
       adapter,
       entry: 'src/index.tsx'
     })
-  ]
+  ],
+  publicDir: 'public',  // 確保 public 目錄被複製到 dist
+  build: {
+    outDir: 'dist',
+    emptyOutDir: false  // 不清空 dist，保留 _worker.js
+  }
 })
