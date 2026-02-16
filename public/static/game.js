@@ -1044,6 +1044,163 @@ function showFormation() { showToast('編制功能開發中...'); }
 function showWorld() { showToast('世界功能開發中...'); }
 function toggleChat() { showToast('聊天功能開發中...'); }
 
+// ========== UI 渲染函數 ==========
+
+// 渲染夥伴面板
+function renderPartnersPanel() {
+    const grid = document.getElementById('partners-grid');
+    if (!grid) return;
+    
+    if (!gameData.partners || gameData.partners.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#888;">尚未招募任何夥伴</div>';
+        return;
+    }
+    
+    grid.innerHTML = gameData.partners.map(p => {
+        const rarity = p.rarityData || RARITY.N;
+        const power = calculatePartnerPower(p);
+        return `
+            <div class="partner-card rarity-bg-${p.rarity || 'N'}" onclick="showPartnerDetail('${p.id}')" style="cursor:pointer; padding:15px; border-radius:8px; border:2px solid ${rarity.color};">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <div style="font-size:40px;">${p.avatar}</div>
+                    <div style="flex:1;">
+                        <div style="font-weight:bold; font-size:16px;">${p.name}</div>
+                        <div class="rarity-${p.rarity}" style="font-size:12px;">${rarity.label} Lv.${p.level}</div>
+                    </div>
+                </div>
+                <div style="font-size:12px; color:#aaa; margin-bottom:5px;">
+                    ${p.jobData ? p.jobData.icon + ' ' + p.jobData.name : '未知職業'}
+                </div>
+                <div style="background:rgba(0,0,0,0.3); padding:5px; border-radius:4px; font-size:12px;">
+                    ⚔️ 戰力：${power.toLocaleString()}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// 顯示夥伴詳情
+function showPartnerDetail(partnerId) {
+    const partner = gameData.partners.find(p => p.id === partnerId);
+    if (!partner) return;
+    
+    const rarity = partner.rarityData || RARITY.N;
+    const job = partner.jobData || {};
+    const power = calculatePartnerPower(partner);
+    const activeSkill = typeof SKILLS !== 'undefined' && partner.activeSkill ? SKILLS[partner.activeSkill] : null;
+    const passiveSkill = typeof SKILLS !== 'undefined' && partner.passiveSkill ? SKILLS[partner.passiveSkill] : null;
+    
+    document.getElementById('partner-detail-name').textContent = partner.name;
+    document.getElementById('partner-detail-content').innerHTML = `
+        <div style="text-align:center; margin-bottom:20px;">
+            <div style="font-size:80px;">${partner.avatar}</div>
+            <div class="rarity-${partner.rarity}" style="font-size:18px; font-weight:bold;">${rarity.label} ${partner.name}</div>
+            <div style="color:#aaa; margin-top:5px;">${job.icon || ''} ${job.name || '未知職業'} | Lv.${partner.level}/${partner.maxLevel}</div>
+        </div>
+        
+        <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:10px; margin-bottom:20px;">
+            <div class="stat-item attr-STR"><div>力量</div><div>${partner.currentStats.STR}</div></div>
+            <div class="stat-item attr-DEF"><div>防禦</div><div>${partner.currentStats.DEF}</div></div>
+            <div class="stat-item attr-AGI"><div>敏捷</div><div>${partner.currentStats.AGI}</div></div>
+            <div class="stat-item attr-INT"><div>智力</div><div>${partner.currentStats.INT}</div></div>
+            <div class="stat-item attr-WIS"><div>感知</div><div>${partner.currentStats.WIS}</div></div>
+        </div>
+        
+        <div style="margin-bottom:15px;">
+            <div style="font-weight:bold; margin-bottom:5px;">⚔️ 戰鬥力：${power.toLocaleString()}</div>
+            <div style="font-size:12px; color:#aaa;">傷害倍率：${rarity.multiplier}x</div>
+        </div>
+        
+        ${activeSkill ? `
+        <div class="skill-item" style="margin-bottom:10px; padding:10px; background:rgba(212,175,55,0.1); border-radius:6px;">
+            <div style="font-weight:bold; color:#d4af37;">🔥 ${activeSkill.name}</div>
+            <div style="font-size:12px; color:#aaa; margin-top:5px;">${activeSkill.desc}</div>
+        </div>
+        ` : ''}
+        
+        ${passiveSkill ? `
+        <div class="skill-item" style="padding:10px; background:rgba(100,100,100,0.1); border-radius:6px;">
+            <div style="font-weight:bold; color:#888;">✨ ${passiveSkill.name}</div>
+            <div style="font-size:12px; color:#aaa; margin-top:5px;">${passiveSkill.desc}</div>
+        </div>
+        ` : ''}
+        
+        ${partner.gender === 'female' ? `
+        <div style="margin-top:20px; padding:10px; background:rgba(255,20,147,0.1); border-radius:6px;">
+            <div style="font-weight:bold; color:#ff1493;">💖 屈服度：${partner.submission}%</div>
+            <div style="height:8px; background:rgba(0,0,0,0.3); border-radius:4px; margin-top:5px; overflow:hidden;">
+                <div style="height:100%; background:linear-gradient(90deg, #ff1493, #ff69b4); width:${partner.submission/2}%;"></div>
+            </div>
+        </div>
+        ` : ''}
+        
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button class="modal-btn primary" onclick="levelUpPartner('${partner.id}'); showPartnerDetail('${partner.id}');" style="flex:1;">
+                升級 (${Math.floor(1000 + partner.level * 500).toLocaleString()}$)
+            </button>
+            ${partner.gender === 'female' ? `
+            <button class="modal-btn" onclick="increaseSubmission('${partner.id}', 10); showPartnerDetail('${partner.id}');" style="flex:1;">
+                互動 (+10%)
+            </button>
+            ` : ''}
+        </div>
+    `;
+    
+    document.getElementById('partner-detail-panel').style.display = 'flex';
+}
+
+function closePartnerDetail(event) {
+    if (event && event.target.className !== 'modal-overlay') return;
+    document.getElementById('partner-detail-panel').style.display = 'none';
+}
+
+function closePartnersPanel(event) {
+    if (event && event.target.className !== 'modal-overlay') return;
+    document.getElementById('partners-panel').style.display = 'none';
+}
+
+// 渲染後宮面板
+function renderHaremPanel() {
+    const content = document.getElementById('harem-content');
+    if (!content) return;
+    
+    const haremMembers = gameData.partners.filter(p => gameData.harem.includes(p.id));
+    
+    if (haremMembers.length === 0) {
+        content.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">後宮目前沒有成員<br><small>需招募 SR 以上女性夥伴並達到 20% 屈服度</small></div>';
+        return;
+    }
+    
+    content.innerHTML = `
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:15px; max-height:60vh; overflow-y:auto;">
+            ${haremMembers.map(p => {
+                const rarity = p.rarityData || RARITY.SR;
+                const stage = Math.floor(p.submission / 20);
+                return `
+                    <div class="harem-card rarity-bg-${p.rarity}" onclick="showPartnerDetail('${p.id}')" style="cursor:pointer; padding:15px; border-radius:8px; border:2px solid ${rarity.color};">
+                        <div style="text-align:center; margin-bottom:10px;">
+                            <div style="font-size:60px;">${p.avatar}</div>
+                            <div style="font-weight:bold;">${p.name}</div>
+                            <div class="rarity-${p.rarity}" style="font-size:12px;">${rarity.label}</div>
+                        </div>
+                        <div style="font-size:12px; color:#ff1493; margin-bottom:5px;">
+                            💖 屈服度：${p.submission}%（階段 ${stage}）
+                        </div>
+                        <div style="height:6px; background:rgba(0,0,0,0.3); border-radius:3px; overflow:hidden;">
+                            <div style="height:100%; background:linear-gradient(90deg, #ff1493, #ff69b4); width:${p.submission/2}%;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+function closeHaremPanel(event) {
+    if (event && event.target.className !== 'modal-overlay') return;
+    document.getElementById('harem-panel').style.display = 'none';
+}
+
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
     SaveSystem.updateContinueBtn();
