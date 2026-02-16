@@ -438,11 +438,38 @@ const ALL_PARTNERS = [
         obtainWay: 'R卡池10%機率',
         canHarem: true
     },
+    {
+        id: 'sr_010',
+        name: '阿福',
+        nickname: '引導者',
+        rarity: 'SR',
+        job: 'SECRETARY',
+        avatar: '📘',
+        gender: 'male',
+        age: 45,
+        baseStats: { STR: 40, DEF: 50, AGI: 70, INT: 85, WIS: 80 },
+        activeSkill: 'STRATEGIC_SUPPORT',
+        passiveSkill: 'EFFICIENT_WORK',
+        personality: 'gentle',
+        description: '龍爺留給你的可靠引導者，熟悉幫派運作的每個細節。溫和有禮，但經驗豐富，會在新手階段提供關鍵建議',
+        background: '跟隨龍爺三十年的老管家，見證了整個幫派的興衰。龍爺臨終前特別囑咐他照顧你，教導你成為真正的老大',
+        obtainWay: '遊戲開始時自動加入',
+        canHarem: false,
+        isGuide: true, // 標記為引導者
+        guideTips: [
+            '少主，這是您父親留下的基業，要好好經營啊。',
+            '建議先建設一些賺錢的產業，資金是一切的基礎。',
+            '招募夥伴時要看清他們的能力和忠誠度。',
+            '每個路線都有其獨特的優勢，要善加利用。',
+            '後宮系統需要SR級以上的女性角色才能加入。',
+            '記住您父親的教誨，做事要有底線。'
+        ]
+    },
     
     // ===== R 稀有 (綠色) =====
     {
         id: 'r_001',
-        name: '小弟A',
+        name: '小弟甲',
         rarity: 'R',
         job: 'FIGHTER',
         avatar: '👊',
@@ -452,11 +479,13 @@ const ALL_PARTNERS = [
         passiveSkill: 'IRON_FIST',
         description: '普通的街頭打手',
         obtainWay: '新手招募',
-        canHarem: false
+        canHarem: false,
+        canBeConsumed: true, // 可被吃卡
+        expBonus: 0.04 // 4%經驗加成
     },
     {
         id: 'r_002',
-        name: '小弟B',
+        name: '小弟乙',
         rarity: 'R',
         job: 'BODYGUARD',
         avatar: '🛡️',
@@ -466,7 +495,9 @@ const ALL_PARTNERS = [
         passiveSkill: 'IRON_BODY',
         description: '負責看場子的保鏢',
         obtainWay: '新手招募',
-        canHarem: false
+        canHarem: false,
+        canBeConsumed: true, // 可被吃卡
+        expBonus: 0.04 // 4%經驗加成
     },
     {
         id: 'r_003',
@@ -496,7 +527,9 @@ const ALL_PARTNERS = [
         passiveSkill: 'IRON_FIST',
         description: '隨處可見的街頭混混',
         obtainWay: '基礎招募',
-        canHarem: false
+        canHarem: false,
+        canBeConsumed: true, // 可被吃卡
+        expBonus: 0.02 // 2%經驗加成
     },
     {
         id: 'n_002',
@@ -510,7 +543,9 @@ const ALL_PARTNERS = [
         passiveSkill: 'IRON_BODY',
         description: '臨時雇來的保鏢',
         obtainWay: '基礎招募',
-        canHarem: false
+        canHarem: false,
+        canBeConsumed: true, // 可被吃卡
+        expBonus: 0.02 // 2%經驗加成
     }
 ];
 
@@ -557,7 +592,56 @@ function getHaremPartners() {
     return ALL_PARTNERS.filter(p => p.canHarem && p.rarity !== 'N' && p.rarity !== 'R');
 }
 
+// ========== 吃卡系統 ==========
+function canConsumePartner(partnerId) {
+    const partner = ALL_PARTNERS.find(p => p.id === partnerId);
+    return partner && partner.canBeConsumed === true;
+}
+
+function getExpBonus(partnerId) {
+    const partner = ALL_PARTNERS.find(p => p.id === partnerId);
+    if (!partner || !partner.canBeConsumed) return 0;
+    return partner.expBonus || 0;
+}
+
+function consumePartnerForExp(targetPartnerId, consumePartnerId) {
+    const target = ALL_PARTNERS.find(p => p.id === targetPartnerId);
+    const consume = ALL_PARTNERS.find(p => p.id === consumePartnerId);
+    
+    if (!target || !consume || !consume.canBeConsumed) {
+        return { success: false, message: '無法執行吃卡操作' };
+    }
+    
+    // 計算基礎經驗（根據被吃卡的稀有度）
+    let baseExp = 0;
+    switch (consume.rarity) {
+        case 'N': baseExp = 100; break;
+        case 'R': baseExp = 300; break;
+        default: baseExp = 0;
+    }
+    
+    // 加上吃卡加成
+    const bonus = consume.expBonus || 0;
+    const totalExp = Math.floor(baseExp * (1 + bonus));
+    
+    return {
+        success: true,
+        baseExp: baseExp,
+        bonus: bonus,
+        totalExp: totalExp,
+        message: `${consume.name}被吃卡，獲得 ${totalExp} 經驗（基礎${baseExp} + ${(bonus*100).toFixed(0)}%加成）`
+    };
+}
+
+function getConsumablePartners() {
+    return ALL_PARTNERS.filter(p => p.canBeConsumed === true);
+}
+
 // 導出供遊戲使用
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { RARITY, JOBS, SKILLS, ALL_PARTNERS, HAREM_LEVELS, calculateStats, getHaremLevel, getHaremPartners };
+    module.exports = { 
+        RARITY, JOBS, SKILLS, ALL_PARTNERS, HAREM_LEVELS, 
+        calculateStats, getHaremLevel, getHaremPartners,
+        canConsumePartner, getExpBonus, consumePartnerForExp, getConsumablePartners
+    };
 }

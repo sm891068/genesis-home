@@ -24,7 +24,7 @@ const ROUTES_DATA = {
         },
         
         // 起始夥伴（partner-data.js 中的 ID）
-        startPartners: ['ssr_001', 'sr_001', 'r_001'],
+        startPartners: ['sr_010', 'ssr_001', 'sr_001', 'r_001'],
         
         // 專屬建築
         uniqueBuildings: ['community_center', 'legal_office'],
@@ -60,7 +60,7 @@ const ROUTES_DATA = {
             }
         },
         
-        startPartners: ['ssr_002', 'sr_002', 'r_002'],
+        startPartners: ['sr_010', 'ssr_002', 'sr_002', 'r_002'],
         uniqueBuildings: ['investment_bank', 'money_laundry'],
         traits: ['資本', '經濟', '投資', '賄賂'],
         
@@ -91,7 +91,7 @@ const ROUTES_DATA = {
             }
         },
         
-        startPartners: ['ur_001', 'sr_003', 'r_003'],
+        startPartners: ['sr_010', 'ur_001', 'sr_003', 'r_003'],
         uniqueBuildings: ['respect_hall', 'negotiation_center'],
         traits: ['聲望', '忠誠', '談判', '威信'],
         
@@ -122,7 +122,7 @@ const ROUTES_DATA = {
             }
         },
         
-        startPartners: ['ssr_003', 'sr_004', 'sr_005'],
+        startPartners: ['sr_010', 'ssr_003', 'sr_004', 'sr_005'],
         uniqueBuildings: ['luxury_club', 'beauty_salon'],
         traits: ['魅力', '後宮', '交際', '吸引力'],
         
@@ -153,7 +153,7 @@ const ROUTES_DATA = {
             }
         },
         
-        startPartners: ['ur_002', 'ssr_004', 'sr_006'],
+        startPartners: ['sr_010', 'ur_002', 'ssr_004', 'sr_006'],
         uniqueBuildings: ['training_ground', 'weapon_depot'],
         traits: ['武力', '戰鬥', '軍火', '征服'],
         
@@ -184,7 +184,7 @@ const ROUTES_DATA = {
             }
         },
         
-        startPartners: ['ur_002', 'ssr_005', 'sr_007'],
+        startPartners: ['sr_010', 'ur_002', 'ssr_005', 'sr_007'],
         uniqueBuildings: ['intelligence_center', 'tech_lab'],
         traits: ['智謀', '情報', '策略', '科技'],
         

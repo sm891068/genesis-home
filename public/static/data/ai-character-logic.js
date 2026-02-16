@@ -739,6 +739,58 @@ const AICharacterLogic = {
             weak: '對不起，我實力不夠...',
             loyal: '老大，我永遠跟著你！'
         }
+    },
+
+    // ===== SR 新手引導者 =====
+    'sr_010': {
+        partnerId: 'sr_010',
+        name: '阿福',
+        basePersonality: 'gentle', // 基礎性格：溫柔
+        specialTraits: ['龍爺的管家', '經驗豐富', '忠誠可靠', '新手導師'],
+        
+        decisionWeights: {
+            power: 65,
+            money: 75,
+            loyalty: 100,
+            reputation: 80
+        },
+        
+        specialResponses: {
+            greeting: '少主，老福來遲了，讓您久等了。',
+            tutorial: '這是您父親留下的基業，我會一步步教您如何經營。',
+            advice: '依老福之見，這件事應該這樣處理...',
+            concern: '少主，您累了吧？要不要休息一下？',
+            memory: '想當年，您父親也是這樣過來的...',
+            proud: '少主做得很好，您父親在天之靈一定很欣慰。',
+            warning: '少主請三思，這件事風險很大。',
+            support: '無論少主做什麼決定，老福都會全力支持。'
+        },
+        
+        // 新手引導提示系統
+        guideTips: {
+            day1: '少主，今天是您接手幫派的第一天，建議先熟悉各項功能。',
+            firstBuild: '建設產業可以增加每日收入，是穩定的財源。',
+            firstRecruit: '招募夥伴時要注意稀有度和能力，SR級以上的角色更值得培養。',
+            firstBattle: '戰鬥時要注意陣型配置，前排坦克、中排輸出、後排輔助。',
+            reachDay7: '少主已經適應得很好了，是時候考慮擴張勢力了。',
+            lowMoney: '少主，資金有些緊張，建議多建些賺錢的產業。',
+            highReputation: '少主的聲望越來越高了，江湖上已經有人在談論您了。',
+            haremUnlock: '少主，SR級以上的女性夥伴可以加入後宮系統。',
+            routeAdvice: {
+                'A': '道義路線重視聲望和合法經營，適合穩健發展。',
+                'B': '資本路線以錢生錢，適合喜歡經濟戰的玩家。',
+                'C': '聲望路線講究江湖地位，需要經營好各方關係。',
+                'D': '魅力路線可以招募更多女性角色，後宮系統有優勢。',
+                'E': '武力路線直接暴力，戰鬥力強大但容易樹敵。',
+                'F': '智謀路線以智取勝，情報和策略是關鍵。'
+            }
+        },
+        
+        storyTriggers: {
+            always_available: true,
+            special_event: 'guide_tutorial',
+            father_memory: true
+        }
     }
 };
 

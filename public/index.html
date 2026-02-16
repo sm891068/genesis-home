@@ -212,14 +212,20 @@
             <button class="menu-btn" id="continue-btn" onclick="menuController.continueGame()" disabled>
                 ▶️ 繼續遊戲
             </button>
-            <button class="menu-btn" onclick="menuController.showPartnerGallery()">
-                📖 夥伴圖鑑
+            <button class="menu-btn" onclick="menuController.showGloryHall()">
+                👑 榮耀殿堂
             </button>
             <button class="menu-btn" onclick="menuController.showAchievements()">
                 🏆 成就殿堂
             </button>
-            <button class="menu-btn" onclick="menuController.showSettings()">
-                ⚙️ 設定
+            <button class="menu-btn" onclick="menuController.showPartnerGallery()">
+                📖 夥伴圖鑑
+            </button>
+            <button class="menu-btn" onclick="menuController.showDiary()">
+                📔 黑道日誌
+            </button>
+            <button class="menu-btn" onclick="menuController.showOfficeSettings()">
+                🏢 辦公室設定
             </button>
         </div>
         
@@ -320,7 +326,7 @@
             this.showFatherDialogue();
         },
 
-        // 顯示父親對話（12秒）
+        // 顯示父親對話（14秒）
         showFatherDialogue() {
             const dialogue = document.getElementById('father-dialogue');
             const dialogueText = document.getElementById('dialogue-text');
@@ -331,22 +337,24 @@
             mainMenu.style.display = 'none';
             dialogue.style.display = 'flex';
             
-            // 父親的遺言
+            // 父親的遺言（擴充劇情版）
             const messages = [
                 '孩子，如果你看到這段影片，代表我已經不在了...',
-                '這個城市很殘酷，但記住，做人要有底線。',
-                '別碰毒品，那是底線。',
-                '錢能解決的，都不是問題。',
-                '這城市，尊重比恐懼更重要。',
-                '有美人，記得帶回家給你媽看看。',
-                '拳頭是硬道理，但腦子更重要。',
-                '我留給你的，不只是這個幫派，還有我的信念。',
-                '現在，選擇你自己的道路吧...',
-                '記住，我永遠以你為榮。'
+                '這個城市很殘酷，我在這條路上走了三十年，見證了無數的生死。',
+                '記住，做人要有底線。別碰毒品，那是底線。',
+                '錢很重要，但不是一切。錢能解決的，都不是問題。',
+                '真正的老大，靠的是尊重而非恐懼。這城市，尊重比恐懼更重要。',
+                '我知道你喜歡漂亮姑娘，有美人，記得帶回家給你媽看看。',
+                '江湖上，拳頭是硬道理，但腦子更重要。懂得用腦才能活得長久。',
+                '我留給你的，不只是這個幫派，還有我的信念和三十年的人脈。',
+                '我為你準備了一個可靠的引導者，他會在你最需要的時候出現。',
+                '無論你選擇哪條路，都要記住，家人永遠是最重要的。',
+                '現在，選擇你自己的道路吧...走出屬於你的傳奇。',
+                '記住，爸爸永遠以你為榮。願你平安，願你強大。'
             ];
             
             let currentIndex = 0;
-            let timeLeft = 12;
+            let timeLeft = 14;
             
             // 更新對話內容
             const updateDialogue = () => {
@@ -359,8 +367,8 @@
             // 初始顯示
             updateDialogue();
             
-            // 每1.2秒換一句
-            const dialogueInterval = setInterval(updateDialogue, 1200);
+            // 每1.15秒換一句（12句 × 1.15秒 ≈ 14秒）
+            const dialogueInterval = setInterval(updateDialogue, 1150);
             
             // 倒計時
             const countdownInterval = setInterval(() => {
@@ -580,16 +588,28 @@
             // TODO: 顯示夥伴圖鑑畫面
         },
 
+        // 顯示榮耀殿堂
+        showGloryHall() {
+            Toast.show('榮耀殿堂功能開發中...', 2000);
+            // TODO: 顯示榮耀殿堂畫面
+        },
+
         // 顯示成就殿堂
         showAchievements() {
             Toast.show('成就殿堂功能開發中...', 2000);
             // TODO: 顯示成就殿堂畫面
         },
 
-        // 顯示設定
-        showSettings() {
-            Toast.show('設定功能開發中...', 2000);
-            // TODO: 顯示設定畫面
+        // 顯示黑道日誌
+        showDiary() {
+            Toast.show('黑道日誌功能開發中...', 2000);
+            // TODO: 顯示黑道日誌畫面
+        },
+
+        // 顯示辦公室設定
+        showOfficeSettings() {
+            Toast.show('辦公室設定功能開發中...', 2000);
+            // TODO: 顯示辦公室設定畫面
         },
 
         // 初始化下雨動畫
