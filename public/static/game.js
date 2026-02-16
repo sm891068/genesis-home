@@ -93,9 +93,11 @@ const gameData = {
     day: 1,
     reputation: 50,
     grid: [],
-    partners: [],
+    partners: [],        // 已招募的夥伴（完整數據）
+    harem: [],           // 後宮成員（僅限 SR+ 女性）
     currentSaveId: null,
-    diary: []
+    diary: [],
+    unlockedPartners: [] // 已解鎖圖鑑的夥伴 ID
 };
 
 // 12句父親的話
@@ -308,6 +310,23 @@ function enterGame() {
     gameData.gangName = document.getElementById('gang-name').value.trim();
     gameData.currentSaveId = Date.now();
     
+    // 招募初始夥伴（根據路線）
+    const route = routeData[gameData.route];
+    if (route && route.partnerIds && typeof recruitPartner === 'function') {
+        // 如果路線定義了 partner-data.js 的夥伴 ID
+        route.partnerIds.forEach(id => recruitPartner(id));
+    } else {
+        // 後備：使用簡化版夥伴數據
+        gameData.partners = route.partners.map(p => ({
+            ...p,
+            level: p.lv || 1,
+            exp: 0,
+            submission: 0,
+            inHarem: false,
+            unlocked: true
+        }));
+    }
+    
     initMap();
     updateResource();
     
@@ -316,7 +335,7 @@ function enterGame() {
     document.getElementById('naming-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'flex';
     
-    showToast('歡迎老大！');
+    showToast(`歡迎老大！已招募 ${gameData.partners.length} 名初始夥伴`);
 }
 
 function initMap() {
@@ -685,10 +704,342 @@ function resetSettings() {
     showToast('設定已重置');
 }
 
-// 虛擬函數（遊戲畫面）
+// ========== 夥伴系統 ==========
+
+// 將 partner-data.js 的簡化夥伴數據轉為完整遊戲數據
+function createPartnerInstance(partnerTemplate) {
+    if (typeof RARITY === 'undefined' || typeof JOBS === 'undefined') {
+        // 後備：如果 partner-data.js 未載入，返回簡化版
+        return { ...partnerTemplate, level: 1, exp: 0, submission: 0 };
+    }
+    
+    const rarity = RARITY[partnerTemplate.rarity || 'N'];
+    const job = JOBS[partnerTemplate.job || 'FIGHTER'];
+    
+    return {
+        id: partnerTemplate.id,
+        name: partnerTemplate.name,
+        avatar: partnerTemplate.avatar || '👤',
+        rarity: partnerTemplate.rarity,
+        rarityData: rarity,
+        job: partnerTemplate.job,
+        jobData: job,
+        gender: partnerTemplate.gender,
+        level: 1,
+        exp: 0,
+        maxLevel: rarity.maxLevel,
+        damageMultiplier: rarity.multiplier,
+        baseStats: { ...partnerTemplate.baseStats },
+        currentStats: { ...partnerTemplate.baseStats },
+        activeSkill: partnerTemplate.activeSkill,
+        passiveSkill: partnerTemplate.passiveSkill,
+        submission: 0,  // 屈服度 0-200%
+        inHarem: false,
+        unlocked: true
+    };
+}
+
+// 招募夥伴（從圖鑑或抽卡獲得）
+function recruitPartner(partnerId) {
+    if (typeof ALL_PARTNERS === 'undefined') {
+        showToast('夥伴數據庫未載入');
+        return;
+    }
+    
+    const template = ALL_PARTNERS.find(p => p.id === partnerId);
+    if (!template) {
+        showToast('找不到該夥伴');
+        return;
+    }
+    
+    // 檢查是否已招募
+    if (gameData.partners.find(p => p.id === partnerId)) {
+        showToast(`${template.name} 已在你的組織中`);
+        return;
+    }
+    
+    const partner = createPartnerInstance(template);
+    gameData.partners.push(partner);
+    
+    // 解鎖圖鑑
+    if (!gameData.unlockedPartners.includes(partnerId)) {
+        gameData.unlockedPartners.push(partnerId);
+    }
+    
+    // 如果是 SR+ 女性，加入後宮候選
+    if (partner.gender === 'female' && ['SR', 'SSR', 'UR', 'LR'].includes(partner.rarity)) {
+        checkHaremEligibility(partner);
+    }
+    
+    showToast(`✅ 招募成功：${partner.name}（${partner.rarityData.label}）`);
+    updateResource();
+}
+
+// 升級夥伴
+function levelUpPartner(partnerId) {
+    const partner = gameData.partners.find(p => p.id === partnerId);
+    if (!partner) return;
+    
+    if (partner.level >= partner.maxLevel) {
+        showToast(`${partner.name} 已達最高等級 Lv.${partner.maxLevel}`);
+        return;
+    }
+    
+    const cost = Math.floor(1000 + partner.level * 500);
+    if (gameData.money < cost) {
+        showToast(`升級需要 $${cost.toLocaleString()}，資金不足`);
+        return;
+    }
+    
+    gameData.money -= cost;
+    partner.level++;
+    partner.exp = 0;
+    
+    // 重新計算屬性（每級 +5%）
+    const multiplier = 1 + (partner.level - 1) * 0.05;
+    for (let stat in partner.baseStats) {
+        partner.currentStats[stat] = Math.floor(partner.baseStats[stat] * multiplier);
+    }
+    
+    showToast(`✨ ${partner.name} 升級至 Lv.${partner.level}`);
+    updateResource();
+}
+
+// 計算夥伴戰鬥力
+function calculatePartnerPower(partner) {
+    const stats = partner.currentStats;
+    const base = (stats.STR + stats.DEF + stats.AGI + stats.INT + stats.WIS) * partner.damageMultiplier;
+    return Math.floor(base * (1 + partner.level * 0.1));
+}
+
+// 顯示夥伴列表面板
+function showPartners() {
+    if (!gameData.partners || gameData.partners.length === 0) {
+        showToast('你還沒有招募任何夥伴');
+        return;
+    }
+    
+    const grid = document.getElementById('partners-grid');
+    grid.innerHTML = gameData.partners.map(p => {
+        const power = calculatePartnerPower(p);
+        const rarityClass = `rarity-${p.rarity || 'N'}`;
+        const rarityLabel = p.rarityData ? p.rarityData.label : 'N';
+        const jobLabel = p.jobData ? p.jobData.name : (p.role || '未知');
+        
+        return `
+            <div class="partner-card ${rarityClass}" onclick="showPartnerDetail('${p.id}')">
+                <div class="partner-avatar">${p.avatar || '👤'}</div>
+                <div class="partner-name">${p.name}</div>
+                <div class="partner-rarity">${rarityLabel}</div>
+                <div class="partner-job">${jobLabel}</div>
+                <div class="partner-level">Lv.${p.level || 1}</div>
+                <div class="partner-power">戰力: ${power}</div>
+                ${p.inHarem ? '<div class="harem-badge">💖</div>' : ''}
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('partners-panel').style.display = 'flex';
+}
+
+function closePartnersPanel(event) {
+    if (!event || event.target.id === 'partners-panel') {
+        document.getElementById('partners-panel').style.display = 'none';
+    }
+}
+
+// 顯示夥伴詳細資料
+function showPartnerDetail(partnerId) {
+    const partner = gameData.partners.find(p => p.id === partnerId);
+    if (!partner) return;
+    
+    const rarityClass = `rarity-bg-${partner.rarity || 'N'}`;
+    const stats = partner.currentStats || partner.baseStats;
+    const activeSkillData = typeof SKILLS !== 'undefined' && partner.activeSkill ? SKILLS[partner.activeSkill] : null;
+    const passiveSkillData = typeof SKILLS !== 'undefined' && partner.passiveSkill ? SKILLS[partner.passiveSkill] : null;
+    
+    document.getElementById('partner-detail-name').textContent = partner.name;
+    document.getElementById('partner-detail-content').innerHTML = `
+        <div class="partner-detail ${rarityClass}">
+            <div class="partner-detail-header">
+                <div class="partner-detail-avatar">${partner.avatar || '👤'}</div>
+                <div class="partner-detail-info">
+                    <div class="partner-detail-level">Lv.${partner.level} / ${partner.maxLevel || 50}</div>
+                    <div class="partner-detail-exp">經驗值: ${partner.exp || 0} / ${(partner.level || 1) * 100}</div>
+                    <div class="partner-detail-power">總戰力: ${calculatePartnerPower(partner)}</div>
+                </div>
+            </div>
+            
+            <div class="partner-stats-grid">
+                <div class="stat-item attr-STR">
+                    <div class="stat-label">力量 STR</div>
+                    <div class="stat-value">${stats.STR || 0}</div>
+                </div>
+                <div class="stat-item attr-DEF">
+                    <div class="stat-label">防禦 DEF</div>
+                    <div class="stat-value">${stats.DEF || 0}</div>
+                </div>
+                <div class="stat-item attr-AGI">
+                    <div class="stat-label">敏捷 AGI</div>
+                    <div class="stat-value">${stats.AGI || 0}</div>
+                </div>
+                <div class="stat-item attr-INT">
+                    <div class="stat-label">智力 INT</div>
+                    <div class="stat-value">${stats.INT || 0}</div>
+                </div>
+                <div class="stat-item attr-WIS">
+                    <div class="stat-label">智慧 WIS</div>
+                    <div class="stat-value">${stats.WIS || 0}</div>
+                </div>
+            </div>
+            
+            <div class="partner-skills">
+                <h4>技能</h4>
+                ${activeSkillData ? `
+                <div class="skill-item active">
+                    <div class="skill-header">
+                        <span class="skill-name">⚡ ${activeSkillData.name}</span>
+                        <span class="skill-cooldown">CD: ${activeSkillData.cooldown}</span>
+                    </div>
+                    <div class="skill-desc">${activeSkillData.desc}</div>
+                </div>
+                ` : ''}
+                ${passiveSkillData ? `
+                <div class="skill-item passive">
+                    <div class="skill-header">
+                        <span class="skill-name">🔰 ${passiveSkillData.name}</span>
+                    </div>
+                    <div class="skill-desc">${passiveSkillData.desc}</div>
+                </div>
+                ` : ''}
+            </div>
+            
+            ${partner.gender === 'female' && ['SR', 'SSR', 'UR', 'LR'].includes(partner.rarity) ? `
+            <div class="partner-submission">
+                <h4>屈服度: ${partner.submission || 0}%</h4>
+                <div class="submission-bar">
+                    <div class="submission-fill" style="width:${(partner.submission || 0) / 2}%"></div>
+                </div>
+                <button class="modal-btn primary" onclick="increaseSubmission('${partner.id}', 10)">
+                    💖 深度交流 (+10%)
+                </button>
+            </div>
+            ` : ''}
+            
+            <div class="partner-actions">
+                <button class="modal-btn primary" onclick="levelUpPartner('${partner.id}')">
+                    ⬆️ 升級 (需要 $${Math.floor(1000 + (partner.level || 1) * 500).toLocaleString()})
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('partner-detail-panel').style.display = 'flex';
+}
+
+function closePartnerDetail(event) {
+    if (!event || event.target.id === 'partner-detail-panel') {
+        document.getElementById('partner-detail-panel').style.display = 'none';
+    }
+}
+
+// ========== 後宮系統 ==========
+
+// 檢查是否符合後宮資格（SR+ 女性）
+function checkHaremEligibility(partner) {
+    if (partner.gender === 'female' && ['SR', 'SSR', 'UR', 'LR'].includes(partner.rarity)) {
+        if (!partner.inHarem && partner.submission >= 20) {
+            partner.inHarem = true;
+            if (!gameData.harem.includes(partner.id)) {
+                gameData.harem.push(partner.id);
+            }
+            showToast(`💃 ${partner.name} 加入了後宮`);
+        }
+    }
+}
+
+// 提升屈服度
+function increaseSubmission(partnerId, amount) {
+    const partner = gameData.partners.find(p => p.id === partnerId);
+    if (!partner) return;
+    
+    const oldLevel = Math.floor(partner.submission / 20);
+    partner.submission = Math.min(200, partner.submission + amount);
+    const newLevel = Math.floor(partner.submission / 20);
+    
+    if (newLevel > oldLevel) {
+        showToast(`💖 ${partner.name} 的屈服度提升至 ${partner.submission}%（階段 ${newLevel}）`);
+        unlockSubmissionContent(partner, newLevel);
+    }
+    
+    checkHaremEligibility(partner);
+}
+
+// 解鎖屈服度內容
+function unlockSubmissionContent(partner, stage) {
+    const contents = [
+        '基礎對話',
+        '個人任務',
+        '接受禮物',
+        '深度交流',
+        '親密內容',
+        '專屬技能',
+        '故事分支',
+        '隱藏劇情',
+        '特殊結局',
+        '完全屈服',
+        '究極獻身'
+    ];
+    
+    if (stage < contents.length) {
+        showToast(`🔓 已解鎖 ${partner.name} 的「${contents[stage]}」`);
+    }
+}
+
+// 顯示後宮面板
+function showHarem() {
+    if (!gameData.harem || gameData.harem.length === 0) {
+        const panel = document.getElementById('harem-panel');
+        const grid = document.getElementById('harem-grid');
+        grid.innerHTML = '<div class="harem-empty">後宮目前沒有成員<br>（需招募 SR 以上稀有度的女性夥伴，並提升屈服度至 20% 以上）</div>';
+        panel.style.display = 'flex';
+        return;
+    }
+    
+    const haremMembers = gameData.partners.filter(p => gameData.harem.includes(p.id));
+    const grid = document.getElementById('harem-grid');
+    
+    grid.innerHTML = haremMembers.map(p => {
+        const rarityClass = `rarity-${p.rarity}`;
+        const submissionStage = Math.floor((p.submission || 0) / 20);
+        
+        return `
+            <div class="harem-card ${rarityClass}" onclick="showPartnerDetail('${p.id}')">
+                <div class="harem-avatar">${p.avatar}</div>
+                <div class="harem-name">${p.name}</div>
+                <div class="harem-rarity">${p.rarityData ? p.rarityData.label : p.rarity}</div>
+                <div class="harem-submission">
+                    屈服度: ${p.submission || 0}%
+                    <div class="submission-bar-mini">
+                        <div class="submission-fill" style="width:${(p.submission || 0) / 2}%"></div>
+                    </div>
+                </div>
+                <div class="harem-stage">階段: ${submissionStage}/10</div>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('harem-panel').style.display = 'flex';
+}
+
+function closeHaremPanel(event) {
+    if (!event || event.target.id === 'harem-panel') {
+        document.getElementById('harem-panel').style.display = 'none';
+    }
+}
+
+// ========== 其他遊戲功能 ==========
 function showBase() { showToast('基地功能開發中...'); }
-function showHarem() { showToast('後宮功能開發中...'); }
-function showPartners() { showToast('夥伴功能開發中...'); }
 function showFormation() { showToast('編制功能開發中...'); }
 function showWorld() { showToast('世界功能開發中...'); }
 function toggleChat() { showToast('聊天功能開發中...'); }

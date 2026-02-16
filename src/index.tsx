@@ -455,6 +455,50 @@ app.get('/', (c) => {
         </div>
     </div>
 
+    <!-- 夥伴面板 -->
+    <div class="modal-overlay" id="partners-panel" onclick="closePartnersPanel(event)" style="display:none;">
+        <div class="modal-box large">
+            <div class="panel-header">
+                <button class="back-btn" onclick="closePartnersPanel()">←</button>
+                <h3>👥 我的夥伴</h3>
+                <div style="width: 52px;"></div>
+            </div>
+            <div class="partners-grid" id="partners-grid">
+                <!-- 夥伴卡片由 JavaScript 生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 夥伴詳細面板 -->
+    <div class="modal-overlay" id="partner-detail-panel" onclick="closePartnerDetail(event)" style="display:none;">
+        <div class="modal-box large">
+            <div class="panel-header">
+                <button class="back-btn" onclick="closePartnerDetail()">←</button>
+                <h3 id="partner-detail-name">夥伴詳情</h3>
+                <div style="width: 52px;"></div>
+            </div>
+            <div id="partner-detail-content">
+                <!-- 詳細內容由 JavaScript 生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 後宮面板 -->
+    <div class="modal-overlay" id="harem-panel" onclick="closeHaremPanel(event)" style="display:none;">
+        <div class="modal-box large">
+            <div class="panel-header">
+                <button class="back-btn" onclick="closeHaremPanel()">←</button>
+                <h3>💃 私人後宮</h3>
+                <div style="width: 52px;"></div>
+            </div>
+            <div class="harem-hint">只有 SR 以上稀有度的女性夥伴才能進入後宮</div>
+            <div class="harem-grid" id="harem-grid">
+                <!-- 後宮成員由 JavaScript 生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/partner-data.js"></script>
     <script src="/static/game.js"></script>
 </body>
 </html>`)
