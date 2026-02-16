@@ -235,13 +235,15 @@
     </div>
 
     <!-- 父親對話畫面 -->
-    <div id="father-dialogue" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 40px;">
+    <div id="father-dialogue" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; padding: 40px;">
+        <div style="display: flex; align-items: center; justify-content: center; flex-direction: column; height: 100%;">
         <div style="max-width: 800px; text-align: center;">
             <div style="font-size: 60px; margin-bottom: 20px;">👔</div>
             <h2 style="color: var(--gold); font-size: 32px; margin-bottom: 30px;">龍爺的遺言</h2>
             <div id="dialogue-text" style="font-size: 20px; line-height: 2; color: var(--text); min-height: 200px; padding: 30px; background: rgba(212,175,55,0.1); border: 2px solid var(--border); border-radius: 10px;">
             </div>
             <div id="dialogue-timer" style="margin-top: 20px; color: var(--gray); font-size: 16px;"></div>
+        </div>
         </div>
     </div>
 
@@ -264,7 +266,8 @@
     </div>
 
     <!-- 幫派命名畫面 -->
-    <div id="naming-screen" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1100; display: flex; align-items: center; justify-content: center;">
+    <div id="naming-screen" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1100;">
+        <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
         <div style="background: var(--panel); padding: 50px; border: 3px solid var(--gold); border-radius: 15px; max-width: 500px; text-align: center;">
             <h2 style="color: var(--gold); font-size: 32px; margin-bottom: 30px;">建立你的帝國</h2>
             <div style="margin-bottom: 25px;">
@@ -281,6 +284,7 @@
             <button onclick="menuController.cancelNaming()" style="margin-top: 15px; padding: 12px 30px; background: transparent; border: 2px solid var(--border); color: var(--text); font-size: 16px; cursor: pointer; border-radius: 8px; display: block; width: 100%;">
                 取消
             </button>
+        </div>
         </div>
     </div>
 
@@ -335,7 +339,7 @@
             
             // 隱藏主選單
             mainMenu.style.display = 'none';
-            dialogue.style.display = 'flex';
+            dialogue.style.display = 'block';
             
             // 父親的遺言（擴充劇情版）
             const messages = [
