@@ -253,8 +253,8 @@
             <h2 style="color: var(--gold); font-size: clamp(24px, 5vw, 36px); text-align: center; margin-bottom: 10px;">選擇你的道路</h2>
             <p style="text-align: center; color: var(--gray); margin-bottom: 30px; font-size: clamp(14px, 3vw, 16px);">5條路線，不同的傳奇</p>
             
-            <!-- 路線網格：響應式 2x3 佈局 -->
-            <div id="routes-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 15px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+            <!-- 路線網格：響應式 2x3 佈局（縮小10%）-->
+            <div id="routes-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(252px, 100%), 1fr)); gap: 13px; margin-bottom: 27px; max-width: 1080px; margin-left: auto; margin-right: auto;">
                 <!-- 路線卡片將由 JavaScript 生成 -->
             </div>
             
@@ -419,29 +419,29 @@
             card.style.cssText = `
                 background: linear-gradient(135deg, ${route.color}20, ${route.color}05);
                 border: 3px solid ${route.color};
-                border-radius: 12px;
-                padding: clamp(15px, 3vw, 20px);
+                border-radius: 10px;
+                padding: clamp(13px, 2.7vw, 18px);
                 cursor: pointer;
                 transition: all 0.3s;
                 position: relative;
                 overflow: hidden;
-                min-height: 200px;
+                min-height: 180px;
             `;
             
             card.innerHTML = `
-                <div style="font-size: clamp(32px, 8vw, 40px); text-align: center; margin-bottom: 10px;">${route.icon}</div>
-                <h3 style="color: ${route.color}; font-size: clamp(18px, 4vw, 22px); text-align: center; margin-bottom: 8px; font-weight: bold;">${route.name}</h3>
-                <p style="color: var(--gray); text-align: center; font-style: italic; margin-bottom: 12px; font-size: clamp(12px, 2.5vw, 14px); line-height: 1.4;">${route.subtitle}</p>
+                <div style="font-size: clamp(29px, 7.2vw, 36px); text-align: center; margin-bottom: 9px;">${route.icon}</div>
+                <h3 style="color: ${route.color}; font-size: clamp(16px, 3.6vw, 20px); text-align: center; margin-bottom: 7px; font-weight: bold;">${route.name}</h3>
+                <p style="color: var(--gray); text-align: center; font-style: italic; margin-bottom: 11px; font-size: clamp(11px, 2.25vw, 13px); line-height: 1.4;">${route.subtitle}</p>
                 
-                <div style="background: rgba(0,0,0,0.3); padding: clamp(8px, 2vw, 12px); border-radius: 6px; margin-bottom: 10px;">
-                    <div style="color: var(--text); font-size: clamp(11px, 2vw, 13px); line-height: 1.6; text-align: center;">
+                <div style="background: rgba(0,0,0,0.3); padding: clamp(7px, 1.8vw, 11px); border-radius: 5px; margin-bottom: 9px;">
+                    <div style="color: var(--text); font-size: clamp(10px, 1.8vw, 12px); line-height: 1.5; text-align: center;">
                         💰 ${(route.bonuses.money / 1000).toFixed(0)}K | 
                         🎖️ ${route.bonuses.reputation} | 
                         👥 ${route.bonuses.crew}
                     </div>
                 </div>
                 
-                <div class="route-selected-mark" style="display: none; position: absolute; top: 10px; right: 10px; background: ${route.color}; color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                <div class="route-selected-mark" style="display: none; position: absolute; top: 9px; right: 9px; background: ${route.color}; color: #fff; padding: 4px 9px; border-radius: 18px; font-size: 11px; font-weight: bold;">
                     ✓ 已選
                 </div>
             `;
