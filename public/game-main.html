@@ -415,6 +415,320 @@
         .toast.error { border-color: #e74c3c; }
         .toast.warning { border-color: #f39c12; }
         
+        /* ========== 右側建築面板 ========== */
+        #building-panel-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 300;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        #building-panel-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+        
+        #building-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 360px;
+            height: 100vh;
+            background: var(--panel);
+            border-left: 1.5px solid var(--border);
+            z-index: 301;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.5);
+        }
+        
+        #building-panel.show {
+            display: flex;
+            transform: translateX(0);
+        }
+        
+        .building-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(90deg, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.03) 100%);
+            flex-shrink: 0;
+        }
+        
+        .building-panel-header h3 {
+            font-size: 18px;
+            color: var(--gold);
+            font-family: 'Noto Serif TC', serif;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .building-panel-close {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+        
+        .building-panel-close:hover {
+            color: var(--gold);
+            background: rgba(212,175,55,0.1);
+            transform: rotate(90deg);
+        }
+        
+        .building-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .building-panel-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .building-panel-content::-webkit-scrollbar-thumb {
+            background: rgba(212,175,55,0.3);
+            border-radius: 3px;
+        }
+        
+        .building-info-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .building-icon-large {
+            font-size: 64px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .building-name-level {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+        
+        .building-description {
+            text-align: center;
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        .building-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        
+        .stat-row .label {
+            color: var(--gray);
+        }
+        
+        .stat-row .value {
+            color: var(--gold);
+            font-weight: 600;
+        }
+        
+        .upgrade-section {
+            background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.03));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .upgrade-section h4 {
+            font-size: 14px;
+            color: var(--gold);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .upgrade-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 12px;
+        }
+        
+        .upgrade-item {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text);
+        }
+        
+        .upgrade-item .label {
+            color: var(--gray);
+        }
+        
+        .panel-actions {
+            display: flex;
+            gap: 8px;
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            background: rgba(0,0,0,0.3);
+            flex-shrink: 0;
+        }
+        
+        .panel-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .panel-btn:hover {
+            background: rgba(212,175,55,0.1);
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+        
+        .panel-btn.primary {
+            background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.1));
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        .panel-btn.primary:hover {
+            background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(212,175,55,0.15));
+            box-shadow: 0 4px 15px rgba(212,175,55,0.2);
+        }
+        
+        .panel-btn.danger {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        
+        .panel-btn.danger:hover {
+            background: rgba(255,46,99,0.1);
+            border-color: var(--red);
+        }
+        
+        .panel-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .panel-btn:disabled:hover {
+            transform: none;
+            background: transparent;
+            border-color: var(--border);
+            color: var(--text);
+        }
+        
+        .build-menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .build-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .build-menu-item:hover {
+            background: rgba(212,175,55,0.1);
+            border-color: var(--gold);
+            transform: translateX(4px);
+        }
+        
+        .build-menu-item.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .build-menu-item.disabled:hover {
+            background: rgba(255,255,255,0.03);
+            border-color: var(--border);
+            transform: none;
+        }
+        
+        .build-menu-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .build-menu-info {
+            flex: 1;
+        }
+        
+        .build-menu-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        
+        .build-menu-cost {
+            font-size: 12px;
+            color: var(--gold);
+            margin-bottom: 2px;
+        }
+        
+        .build-menu-desc {
+            font-size: 11px;
+            color: var(--gray);
+        }
+        
         /* ========== 響應式設計 ========== */
         @media (max-width: 768px) {
             .game-header { height: 48px; padding: 8px 10px; gap: 8px; }
@@ -431,6 +745,20 @@
             .side-actions { right: 12px; bottom: 70px; }
             .side-btn { width: 50px; height: 50px; font-size: 20px; }
             .panel-drawer { max-height: 90vh; border-radius: 20px 20px 0 0; }
+            
+            /* 建築面板在手機上全屏 */
+            #building-panel {
+                width: 100%;
+                border-left: none;
+                border-top: 1.5px solid var(--border);
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            /* 平板上縮小寬度 */
+            #building-panel {
+                width: 320px;
+            }
         }
     </style>
 </head>
@@ -542,6 +870,23 @@
         </div>
     </div>
 
+    <!-- 建築面板遮罩 -->
+    <div id="building-panel-overlay" onclick="buildingController.close()"></div>
+
+    <!-- 建築面板 -->
+    <div id="building-panel">
+        <div class="building-panel-header">
+            <h3 id="building-panel-title">建築詳情</h3>
+            <button class="building-panel-close" onclick="buildingController.close()">✕</button>
+        </div>
+        <div class="building-panel-content" id="building-panel-content">
+            <!-- 動態載入內容 -->
+        </div>
+        <div id="building-panel-actions" class="panel-actions" style="display:none;">
+            <!-- 動態載入按鈕 -->
+        </div>
+    </div>
+
     <!-- ========== 載入所有模組（按順序）========== -->
     
     <!-- 1. 核心數據層 -->
@@ -631,9 +976,9 @@
             if (!cell) return;
 
             if (cell.type === 'empty') {
-                Toast.show('建築功能開發中...', 1500);
+                buildingController.showBuildMenu(index);
             } else {
-                Toast.show(`${baseSystem.getBuildingType(cell.type).name} Lv.${cell.level}`, 1500);
+                buildingController.showDetail(index);
             }
         },
 
@@ -681,6 +1026,279 @@
                 GameState.autoSave();
                 window.location.href = '/';
             });
+        }
+    };
+
+    // ========== 建築面板控制器 ==========
+    const buildingController = {
+        currentCellIndex: null,
+
+        // 顯示建築詳情
+        showDetail(cellIndex) {
+            this.currentCellIndex = cellIndex;
+            const cell = GameState.current.grid[cellIndex];
+            if (!cell || cell.type === 'empty') return;
+
+            const building = baseSystem.getBuildingType(cell.type);
+            
+            // 更新標題
+            document.getElementById('building-panel-title').innerHTML = `${building.icon} ${building.name}`;
+            
+            // 渲染內容
+            const content = document.getElementById('building-panel-content');
+            content.innerHTML = this.renderBuildingDetail(cell, building, cellIndex);
+            
+            // 渲染操作按鈕
+            this.renderActions(cell, building, cellIndex);
+            
+            // 顯示面板
+            this.show();
+        },
+
+        // 顯示建造菜單
+        showBuildMenu(cellIndex) {
+            this.currentCellIndex = cellIndex;
+            
+            // 更新標題
+            document.getElementById('building-panel-title').innerHTML = '🏗️ 建造新建築';
+            
+            // 渲染內容
+            const content = document.getElementById('building-panel-content');
+            content.innerHTML = this.renderBuildMenu(cellIndex);
+            
+            // 隱藏底部按鈕
+            document.getElementById('building-panel-actions').style.display = 'none';
+            
+            // 顯示面板
+            this.show();
+        },
+
+        // 顯示面板
+        show() {
+            const overlay = document.getElementById('building-panel-overlay');
+            const panel = document.getElementById('building-panel');
+            
+            overlay.classList.add('show');
+            panel.classList.add('show');
+        },
+
+        // 關閉面板
+        close() {
+            const overlay = document.getElementById('building-panel-overlay');
+            const panel = document.getElementById('building-panel');
+            
+            overlay.classList.remove('show');
+            panel.classList.remove('show');
+            
+            this.currentCellIndex = null;
+        },
+
+        // 渲染建築詳情
+        renderBuildingDetail(cell, building, cellIndex) {
+            const isMaxLevel = cell.level >= building.maxLevel;
+            const upgradeCost = !isMaxLevel && typeof building.upgradeCost === 'function' 
+                ? building.upgradeCost(cell.level) 
+                : 0;
+            
+            const nextLevelIncome = building.income > 0 && !isMaxLevel
+                ? Math.floor(building.income * Math.pow(1.2, cell.level))
+                : 0;
+            
+            const incomeIncrease = nextLevelIncome - cell.income;
+
+            // 計算防禦值
+            const currentDefense = cell.type === 'hq' ? cell.level * 50 : cell.level * 10;
+            const nextDefense = cell.type === 'hq' ? (cell.level + 1) * 50 : (cell.level + 1) * 10;
+            const defenseIncrease = nextDefense - currentDefense;
+
+            return `
+                <div class="building-info-card">
+                    <div class="building-icon-large">${building.icon}</div>
+                    <div class="building-name-level">${building.name} - Lv.${cell.level}</div>
+                    <div class="building-description">${building.description || ''}</div>
+                </div>
+
+                <div class="building-info-card">
+                    <h4 style="font-size:13px; color:var(--gold); margin-bottom:12px;">📊 當前狀態</h4>
+                    <div class="building-stats">
+                        <div class="stat-row">
+                            <span class="label">等級</span>
+                            <span class="value">Lv.${cell.level} / ${building.maxLevel}</span>
+                        </div>
+                        ${building.income > 0 ? `
+                            <div class="stat-row">
+                                <span class="label">日產量</span>
+                                <span class="value">$${cell.income.toLocaleString()}/天</span>
+                            </div>
+                        ` : ''}
+                        <div class="stat-row">
+                            <span class="label">防禦值</span>
+                            <span class="value">+${currentDefense}</span>
+                        </div>
+                    </div>
+                </div>
+
+                ${!isMaxLevel ? `
+                    <div class="upgrade-section">
+                        <h4>⬆️ 升級信息</h4>
+                        <div class="upgrade-info">
+                            <div class="upgrade-item">
+                                <span class="label">下一級</span>
+                                <span style="color:var(--gold);">Lv.${cell.level + 1}</span>
+                            </div>
+                            <div class="upgrade-item">
+                                <span class="label">升級成本</span>
+                                <span style="color:var(--gold);">$${upgradeCost.toLocaleString()}</span>
+                            </div>
+                            ${building.income > 0 ? `
+                                <div class="upgrade-item">
+                                    <span class="label">日產增加</span>
+                                    <span style="color:#27ae60;">+$${incomeIncrease.toLocaleString()}/天</span>
+                                </div>
+                            ` : ''}
+                            <div class="upgrade-item">
+                                <span class="label">防禦增加</span>
+                                <span style="color:#27ae60;">+${defenseIncrease}</span>
+                            </div>
+                        </div>
+                    </div>
+                ` : `
+                    <div class="upgrade-section">
+                        <h4>✅ 已達最高等級</h4>
+                        <div style="text-align:center; color:var(--gray); font-size:12px; padding:10px 0;">
+                            此建築已達到最高等級 Lv.${building.maxLevel}
+                        </div>
+                    </div>
+                `}
+            `;
+        },
+
+        // 渲染操作按鈕
+        renderActions(cell, building, cellIndex) {
+            const actions = document.getElementById('building-panel-actions');
+            const isMaxLevel = cell.level >= building.maxLevel;
+            const upgradeCost = !isMaxLevel && typeof building.upgradeCost === 'function' 
+                ? building.upgradeCost(cell.level) 
+                : 0;
+            const canAfford = GameState.current.money >= upgradeCost;
+            const canDemolish = cell.type !== 'hq';
+
+            actions.style.display = 'flex';
+            actions.innerHTML = `
+                ${!isMaxLevel ? `
+                    <button class="panel-btn primary" 
+                            onclick="buildingController.upgradeBuilding(${cellIndex})"
+                            ${!canAfford ? 'disabled' : ''}>
+                        ⬆️ 升級 ($${upgradeCost.toLocaleString()})
+                    </button>
+                ` : ''}
+                ${canDemolish ? `
+                    <button class="panel-btn danger" 
+                            onclick="buildingController.demolishBuilding(${cellIndex})">
+                        🗑️ 拆除
+                    </button>
+                ` : ''}
+            `;
+        },
+
+        // 渲染建造菜單
+        renderBuildMenu(cellIndex) {
+            const buildableTypes = baseSystem.getBuildableTypes();
+            
+            return `
+                <div style="margin-bottom:16px;">
+                    <p style="font-size:13px; color:var(--gray); line-height:1.6;">
+                        選擇要建造的建築類型。建築可以為你提供收益、防禦或其他功能。
+                    </p>
+                </div>
+
+                <div class="build-menu-list">
+                    ${buildableTypes.map(type => {
+                        const building = baseSystem.getBuildingType(type);
+                        const canAfford = GameState.current.money >= building.buildCost;
+                        
+                        return `
+                            <div class="build-menu-item ${canAfford ? '' : 'disabled'}" 
+                                 ${canAfford ? `onclick="buildingController.buildBuilding(${cellIndex}, '${type}')"` : ''}>
+                                <div class="build-menu-icon">${building.icon}</div>
+                                <div class="build-menu-info">
+                                    <div class="build-menu-name">${building.name}</div>
+                                    <div class="build-menu-cost">建造成本: $${building.buildCost.toLocaleString()}</div>
+                                    <div class="build-menu-desc">
+                                        ${building.income > 0 ? `日產: $${building.income}/天 | ` : ''}
+                                        ${building.description}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        },
+
+        // 升級建築
+        upgradeBuilding(cellIndex) {
+            const result = baseSystem.upgrade(cellIndex);
+            
+            if (result.success) {
+                Toast.success(result.message);
+                
+                // 更新頭部資源
+                gameController.updateHeader();
+                
+                // 重新渲染地圖
+                gameController.renderMap();
+                
+                // 重新顯示詳情
+                this.showDetail(cellIndex);
+            } else {
+                Toast.error(result.message);
+            }
+        },
+
+        // 拆除建築
+        demolishBuilding(cellIndex) {
+            const cell = GameState.current.grid[cellIndex];
+            const building = baseSystem.getBuildingType(cell.type);
+            
+            showConfirm(`確定要拆除 ${building.name} Lv.${cell.level} 嗎？`, () => {
+                const result = baseSystem.demolish(cellIndex);
+                
+                if (result.success) {
+                    Toast.success(result.message);
+                    
+                    // 更新頭部資源
+                    gameController.updateHeader();
+                    
+                    // 重新渲染地圖
+                    gameController.renderMap();
+                    
+                    // 關閉面板
+                    this.close();
+                } else {
+                    Toast.error(result.message);
+                }
+            });
+        },
+
+        // 建造建築
+        buildBuilding(cellIndex, buildingType) {
+            const result = baseSystem.build(cellIndex, buildingType);
+            
+            if (result.success) {
+                Toast.success(result.message);
+                
+                // 更新頭部資源
+                gameController.updateHeader();
+                
+                // 重新渲染地圖
+                gameController.renderMap();
+                
+                // 顯示新建築的詳情
+                this.showDetail(cellIndex);
+            } else {
+                Toast.error(result.message);
+            }
         }
     };
 
@@ -779,7 +1397,12 @@
     document.addEventListener('keydown', (e) => {
         // ESC 關閉面板
         if (e.key === 'Escape') {
-            panelController.close();
+            // 優先關閉建築面板
+            if (document.getElementById('building-panel').classList.contains('show')) {
+                buildingController.close();
+            } else {
+                panelController.close();
+            }
         }
         
         // 數字鍵 1-9, 0
