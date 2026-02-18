@@ -871,13 +871,13 @@
     </div>
 
     <!-- 建築面板遮罩 -->
-    <div id="building-panel-overlay" onclick="buildingController.close()"></div>
+    <div id="building-panel-overlay"></div>
 
     <!-- 建築面板 -->
     <div id="building-panel">
         <div class="building-panel-header">
             <h3 id="building-panel-title">建築詳情</h3>
-            <button class="building-panel-close" onclick="buildingController.close()">✕</button>
+            <button class="building-panel-close">✕</button>
         </div>
         <div class="building-panel-content" id="building-panel-content">
             <!-- 動態載入內容 -->
@@ -1033,6 +1033,45 @@
     const buildingController = {
         currentCellIndex: null,
 
+        // 初始化事件監聽器
+        init() {
+            // 設置遮罩層點擊事件
+            document.getElementById('building-panel-overlay').addEventListener('click', () => {
+                this.close();
+            });
+            
+            // 設置關閉按鈕事件
+            document.querySelector('.building-panel-close').addEventListener('click', () => {
+                this.close();
+            });
+            
+            // 使用事件委託處理面板內的按鈕點擊
+            document.getElementById('building-panel-actions').addEventListener('click', (e) => {
+                const btn = e.target.closest('button[data-action]');
+                if (!btn) return;
+                
+                const action = btn.dataset.action;
+                const cellIndex = parseInt(btn.dataset.cellIndex);
+                
+                if (action === 'upgrade') {
+                    this.upgradeBuilding(cellIndex);
+                } else if (action === 'demolish') {
+                    this.demolishBuilding(cellIndex);
+                }
+            });
+            
+            // 使用事件委託處理建造菜單項目點擊
+            document.getElementById('building-panel-content').addEventListener('click', (e) => {
+                const item = e.target.closest('.build-menu-item[data-action="build"]');
+                if (!item) return;
+                
+                const cellIndex = parseInt(item.dataset.cellIndex);
+                const buildingType = item.dataset.buildingType;
+                
+                this.buildBuilding(cellIndex, buildingType);
+            });
+        },
+
         // 顯示建築詳情
         showDetail(cellIndex) {
             this.currentCellIndex = cellIndex;
@@ -1095,10 +1134,11 @@
 
         // 渲染建築詳情
         renderBuildingDetail(cell, building, cellIndex) {
+            const DEFENSE_MULTIPLIER_HQ = 50;
+            const DEFENSE_MULTIPLIER_NORMAL = 10;
+            
             const isMaxLevel = cell.level >= building.maxLevel;
-            const upgradeCost = !isMaxLevel && typeof building.upgradeCost === 'function' 
-                ? building.upgradeCost(cell.level) 
-                : 0;
+            const upgradeCost = !isMaxLevel ? this.getUpgradeCost(building, cell.level) : 0;
             
             const nextLevelIncome = building.income > 0 && !isMaxLevel
                 ? Math.floor(building.income * Math.pow(1.2, cell.level))
@@ -1107,8 +1147,8 @@
             const incomeIncrease = nextLevelIncome - cell.income;
 
             // 計算防禦值
-            const currentDefense = cell.type === 'hq' ? cell.level * 50 : cell.level * 10;
-            const nextDefense = cell.type === 'hq' ? (cell.level + 1) * 50 : (cell.level + 1) * 10;
+            const currentDefense = cell.type === 'hq' ? cell.level * DEFENSE_MULTIPLIER_HQ : cell.level * DEFENSE_MULTIPLIER_NORMAL;
+            const nextDefense = cell.type === 'hq' ? (cell.level + 1) * DEFENSE_MULTIPLIER_HQ : (cell.level + 1) * DEFENSE_MULTIPLIER_NORMAL;
             const defenseIncrease = nextDefense - currentDefense;
 
             return `
@@ -1173,13 +1213,18 @@
             `;
         },
 
+        // 計算升級費用（輔助方法）
+        getUpgradeCost(building, currentLevel) {
+            return typeof building.upgradeCost === 'function' 
+                ? building.upgradeCost(currentLevel) 
+                : building.upgradeCost;
+        },
+
         // 渲染操作按鈕
         renderActions(cell, building, cellIndex) {
             const actions = document.getElementById('building-panel-actions');
             const isMaxLevel = cell.level >= building.maxLevel;
-            const upgradeCost = !isMaxLevel && typeof building.upgradeCost === 'function' 
-                ? building.upgradeCost(cell.level) 
-                : 0;
+            const upgradeCost = !isMaxLevel ? this.getUpgradeCost(building, cell.level) : 0;
             const canAfford = GameState.current.money >= upgradeCost;
             const canDemolish = cell.type !== 'hq';
 
@@ -1187,14 +1232,16 @@
             actions.innerHTML = `
                 ${!isMaxLevel ? `
                     <button class="panel-btn primary" 
-                            onclick="buildingController.upgradeBuilding(${cellIndex})"
+                            data-action="upgrade"
+                            data-cell-index="${cellIndex}"
                             ${!canAfford ? 'disabled' : ''}>
                         ⬆️ 升級 ($${upgradeCost.toLocaleString()})
                     </button>
                 ` : ''}
                 ${canDemolish ? `
                     <button class="panel-btn danger" 
-                            onclick="buildingController.demolishBuilding(${cellIndex})">
+                            data-action="demolish"
+                            data-cell-index="${cellIndex}">
                         🗑️ 拆除
                     </button>
                 ` : ''}
@@ -1219,7 +1266,9 @@
                         
                         return `
                             <div class="build-menu-item ${canAfford ? '' : 'disabled'}" 
-                                 ${canAfford ? `onclick="buildingController.buildBuilding(${cellIndex}, '${type}')"` : ''}>
+                                 data-action="${canAfford ? 'build' : ''}"
+                                 data-cell-index="${cellIndex}"
+                                 data-building-type="${type}">
                                 <div class="build-menu-icon">${building.icon}</div>
                                 <div class="build-menu-info">
                                     <div class="build-menu-name">${building.name}</div>
@@ -1420,6 +1469,7 @@
 
     // ========== 初始化 ==========
     document.addEventListener('DOMContentLoaded', () => {
+        buildingController.init();
         gameController.init();
     });
     </script>
