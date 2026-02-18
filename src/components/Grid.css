@@ -1,0 +1,97 @@
+/* Grid Component Styles */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 3), 1fr);
+  gap: var(--grid-gap, 16px);
+  width: 100%;
+}
+
+/* Responsive Grid */
+.grid--responsive {
+  grid-template-columns: repeat(var(--grid-columns-lg, var(--grid-columns, 3)), 1fr);
+}
+
+@media (max-width: 1024px) {
+  .grid--responsive {
+    grid-template-columns: repeat(var(--grid-columns-md, var(--grid-columns, 2)), 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid--responsive {
+    grid-template-columns: repeat(var(--grid-columns-sm, 1), 1fr);
+  }
+}
+
+/* Grid Item Utilities */
+.grid-item {
+  min-width: 0; /* Prevent overflow */
+}
+
+.grid-item--span-2 {
+  grid-column: span 2;
+}
+
+.grid-item--span-3 {
+  grid-column: span 3;
+}
+
+.grid-item--span-4 {
+  grid-column: span 4;
+}
+
+.grid-item--full {
+  grid-column: 1 / -1;
+}
+
+/* Auto Grid (no fixed columns) */
+.grid--auto {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.grid--auto-fill {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+/* Dense Grid */
+.grid--dense {
+  grid-auto-flow: dense;
+}
+
+/* Gap Utilities */
+.grid--gap-sm {
+  gap: var(--spacing-sm);
+}
+
+.grid--gap-md {
+  gap: var(--spacing-md);
+}
+
+.grid--gap-lg {
+  gap: var(--spacing-lg);
+}
+
+.grid--gap-xl {
+  gap: var(--spacing-xl);
+}
+
+/* Alignment */
+.grid--center {
+  align-items: center;
+  justify-items: center;
+}
+
+.grid--start {
+  align-items: start;
+  justify-items: start;
+}
+
+.grid--end {
+  align-items: end;
+  justify-items: end;
+}
+
+.grid--stretch {
+  align-items: stretch;
+  justify-items: stretch;
+}
