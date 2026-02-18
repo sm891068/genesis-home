@@ -638,7 +638,7 @@
         }
         
         @media (max-width: 768px) {
-            .game-header { height: 50px; min-height: 50px; padding: 8px 10px; gap: 8px; }
+            .game-header { min-height: 50px; padding: 8px 10px; gap: 8px; }
             .res-box { gap: 12px; }
             .res-item { min-width: 60px; }
             .res-item .value { font-size: 14px; }
@@ -646,7 +646,7 @@
             .header-btn { width: 36px; height: 36px; font-size: 16px; }
             .map-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
             .map-container { padding: 10px; }
-            .game-footer { height: 60px; min-height: 60px; padding: 6px 8px; }
+            .game-footer { min-height: 60px; padding: 6px 8px; }
             .foot-btn { max-width: 60px; font-size: 8px; gap: 2px; padding: 6px 8px; }
             .foot-btn .icon { font-size: 18px; }
             .side-actions { right: 12px; bottom: 70px; }
@@ -668,7 +668,7 @@
             }
             
             .game-right-panel.show {
-                transform: translateY(0);
+                transform: translateX(0);
             }
         }
     </style>
