@@ -3,7 +3,7 @@
  * Shared type definitions for the Gang Empire Building Game
  */
 
-import { ReactNode, CSSProperties, ButtonHTMLAttributes, HTMLAttributes } from 'react';
+import { ReactNode, CSSProperties, ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes } from 'react';
 
 /**
  * Common component props
@@ -128,7 +128,7 @@ export interface ResourceDisplayProps extends BaseComponentProps {
 /**
  * Input component props
  */
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   helperText?: string;
