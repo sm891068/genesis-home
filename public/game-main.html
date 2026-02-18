@@ -51,13 +51,16 @@
             z-index: 100;
         }
         
-        /* 頂部資源欄 */
+        /* 上方資源面板 (10% 高度) */
+        .game-top-panel,
         .game-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px 16px;
-            height: 56px;
+            height: 10%;
+            min-height: 56px;
+            max-height: 70px;
             background: rgba(0,0,0,0.5);
             border-bottom: 1px solid var(--border);
             backdrop-filter: blur(10px);
@@ -131,13 +134,30 @@
             transform: translateY(-2px);
         }
         
+        /* 主容器 (80% 高度) */
+        .game-main-container {
+            flex: 1;
+            display: flex;
+            gap: 0;
+            min-height: 0;
+            overflow: hidden;
+        }
+        
+        /* 中央視覺區域 (80% 寬度) */
+        .game-center-area {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, rgba(212,175,55,0.03) 0%, transparent 70%);
+        }
+        
         /* 地圖容器 */
         .map-container {
-            flex: 1;
+            width: 100%;
+            max-width: 650px;
             padding: 12px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background: radial-gradient(ellipse at center, rgba(212,175,55,0.03) 0%, transparent 70%);
         }
         
         .map-grid {
@@ -152,9 +172,10 @@
         .grid-cell {
             aspect-ratio: 1;
             background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.1);
             border-radius: 8px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-size: 28px;
@@ -167,7 +188,7 @@
         .grid-cell:hover {
             background: rgba(212,175,55,0.15);
             border-color: var(--gold);
-            transform: scale(0.95);
+            transform: scale(1.05);
             box-shadow: 0 0 20px rgba(212,175,55,0.2);
         }
         
@@ -177,6 +198,80 @@
             background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05));
             box-shadow: 0 0 20px rgba(212,175,55,0.3);
             animation: glow 3s ease-in-out infinite;
+        }
+        
+        /* 建築狀態樣式 */
+        .grid-cell.producing {
+            border-color: var(--green);
+            animation: producing-pulse 1s ease-in-out infinite;
+        }
+        
+        .grid-cell.upgrading {
+            border-color: #f39c12;
+        }
+        
+        .grid-cell.damaged {
+            border-color: #e74c3c;
+        }
+        
+        .grid-cell.maxed {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+        }
+        
+        .grid-cell.selected {
+            border-color: var(--gold);
+            border-width: 3px;
+            box-shadow: 0 0 30px rgba(212,175,55,0.5);
+        }
+        
+        /* 建築圖標容器 */
+        .cell-icon {
+            font-size: 28px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 建築等級標籤 */
+        .cell-level {
+            position: absolute;
+            bottom: 4px;
+            right: 6px;
+            font-size: 9px;
+            color: var(--gold);
+            background: rgba(0,0,0,0.7);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+        
+        /* 建築狀態指示 */
+        .cell-state {
+            position: absolute;
+            top: 4px;
+            left: 6px;
+            font-size: 12px;
+        }
+        
+        /* 進度條 */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            border-radius: 0 0 6px 6px;
+            transition: width 0.3s ease-out;
+        }
+        
+        /* 生產中脈衝動畫 */
+        @keyframes producing-pulse {
+            0%, 100% { 
+                box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(39, 174, 96, 0.8), 0 0 30px rgba(39, 174, 96, 0.4);
+            }
         }
         
         .grid-cell .lv {
@@ -191,13 +286,127 @@
             font-weight: 700;
         }
         
-        /* ========== 底部功能欄 ========== */
+        /* 右側建築詳情面板 (10% 寬度) */
+        .game-right-panel {
+            width: 10%;
+            min-width: 280px;
+            max-width: 350px;
+            background: var(--panel);
+            border-left: 2px solid var(--border);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+        }
+        
+        .game-right-panel.show {
+            display: flex;
+            transform: translateX(0);
+        }
+        
+        .game-right-panel .panel-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(90deg, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.03) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .game-right-panel .panel-header h3 {
+            font-size: 16px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+        
+        .game-right-panel .panel-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: all 0.3s;
+        }
+        
+        .game-right-panel .panel-close-btn:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+        
+        .game-right-panel .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        
+        .building-detail-item {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .building-detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .building-detail-label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .building-detail-value {
+            font-size: 16px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+        
+        .building-action-btn {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: transparent;
+            border: 1px solid var(--gold-dark);
+            color: var(--text);
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .building-action-btn:hover {
+            background: rgba(212,175,55,0.1);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        .building-action-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .building-action-btn.danger {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .building-action-btn.danger:hover {
+            background: rgba(231,76,60,0.1);
+        }
+        
+        /* ========== 底部功能欄 (10% 高度) ========== */
         .game-footer {
             display: flex;
             justify-content: flex-start;
             align-items: center;
             padding: 8px 12px;
-            height: 70px;
+            height: 10%;
+            min-height: 60px;
+            max-height: 80px;
             background: rgba(0,0,0,0.7);
             border-top: 1px solid var(--border);
             backdrop-filter: blur(10px);
@@ -416,8 +625,20 @@
         .toast.warning { border-color: #f39c12; }
         
         /* ========== 響應式設計 ========== */
+        @media (min-width: 1200px) {
+            .game-top-panel, .game-header { height: 70px; }
+            .game-right-panel { min-width: 350px; }
+            .game-footer { height: 80px; }
+        }
+        
+        @media (min-width: 768px) and (max-width: 1199px) {
+            .game-top-panel, .game-header { height: 60px; }
+            .game-right-panel { min-width: 280px; }
+            .game-footer { height: 70px; }
+        }
+        
         @media (max-width: 768px) {
-            .game-header { height: 48px; padding: 8px 10px; gap: 8px; }
+            .game-header { min-height: 50px; padding: 8px 10px; gap: 8px; }
             .res-box { gap: 12px; }
             .res-item { min-width: 60px; }
             .res-item .value { font-size: 14px; }
@@ -425,12 +646,30 @@
             .header-btn { width: 36px; height: 36px; font-size: 16px; }
             .map-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
             .map-container { padding: 10px; }
-            .game-footer { height: 62px; padding: 6px 8px; }
+            .game-footer { min-height: 60px; padding: 6px 8px; }
             .foot-btn { max-width: 60px; font-size: 8px; gap: 2px; padding: 6px 8px; }
             .foot-btn .icon { font-size: 18px; }
             .side-actions { right: 12px; bottom: 70px; }
             .side-btn { width: 50px; height: 50px; font-size: 20px; }
             .panel-drawer { max-height: 90vh; border-radius: 20px 20px 0 0; }
+            
+            /* 手機上右側面板變為全屏抽屜 */
+            .game-right-panel {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                min-width: unset;
+                max-width: unset;
+                z-index: 300;
+                border-left: none;
+            }
+            
+            .game-right-panel.show {
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
@@ -440,8 +679,8 @@
 
     <!-- 遊戲主畫面 -->
     <div id="game-screen">
-        <!-- 頂部資源欄 -->
-        <div class="game-header">
+        <!-- 上方資源面板 (10%) -->
+        <div class="game-header game-top-panel">
             <div class="res-box">
                 <div class="res-item">
                     <span class="label">資金</span>
@@ -467,14 +706,30 @@
             </div>
         </div>
         
-        <!-- 地圖容器 -->
-        <div class="map-container">
-            <div class="map-grid" id="map-grid">
-                <!-- 由 JavaScript 生成 -->
+        <!-- 主容器 (80%) -->
+        <div class="game-main-container">
+            <!-- 中央視覺區域 (80% 寬度) -->
+            <div class="game-center-area">
+                <div class="map-container">
+                    <div class="map-grid" id="map-grid">
+                        <!-- 由 JavaScript 生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右側建築詳情面板 (10% 寬度) -->
+            <div class="game-right-panel" id="building-panel">
+                <div class="panel-header">
+                    <h3 id="building-panel-title">建築詳情</h3>
+                    <button class="panel-close-btn" onclick="gameController.closeBuildingPanel()">✕</button>
+                </div>
+                <div class="panel-content" id="building-panel-content">
+                    <!-- 動態載入建築詳情 -->
+                </div>
             </div>
         </div>
         
-        <!-- 底部功能欄（10個按鈕）-->
+        <!-- 底部功能欄 (10%) -->
         <div class="game-footer">
             <button class="foot-btn active" data-panel="base" onclick="panelController.show('base')">
                 <span class="icon">🏰</span>
@@ -572,6 +827,17 @@
     <script>
     // ========== 遊戲主控制器 ==========
     const gameController = {
+        selectedCellIndex: null,
+        
+        // 建築狀態定義
+        BUILDING_STATES: {
+            IDLE: { indicator: '⚪', class: 'idle', color: '#555' },
+            PRODUCING: { indicator: '🟢', class: 'producing', color: '#27ae60' },
+            UPGRADING: { indicator: '🟡', class: 'upgrading', color: '#f39c12' },
+            DAMAGED: { indicator: '🔴', class: 'damaged', color: '#e74c3c' },
+            MAXED: { indicator: '⭐', class: 'maxed', color: '#d4af37' }
+        },
+        
         init() {
             console.log('[GameController] 初始化遊戲畫面');
             
@@ -606,35 +872,215 @@
             console.log('[GameController] 遊戲畫面初始化完成');
         },
 
-        // 渲染地圖
+        // 獲取建築狀態
+        getBuildingState(cell) {
+            if (cell.type === 'empty') {
+                return { ...this.BUILDING_STATES.IDLE, indicator: '' };
+            }
+            
+            const building = baseSystem.getBuildingType(cell.type);
+            
+            // 已滿級
+            if (cell.level >= building.maxLevel) {
+                return this.BUILDING_STATES.MAXED;
+            }
+            
+            // 生產中（有收益的建築）
+            if (cell.income > 0) {
+                return this.BUILDING_STATES.PRODUCING;
+            }
+            
+            // 默認閒置
+            return this.BUILDING_STATES.IDLE;
+        },
+
+        // 渲染地圖（增強版）
         renderMap() {
             const grid = document.getElementById('map-grid');
             if (!grid) return;
 
             grid.innerHTML = GameState.current.grid.map((cell, index) => {
                 const building = baseSystem.getBuildingType(cell.type);
+                const state = this.getBuildingState(cell);
                 const icon = building.icon;
                 const isHQ = cell.type === 'hq';
+                const isSelected = this.selectedCellIndex === index;
+                
+                const classes = [
+                    'grid-cell',
+                    isHQ ? 'hq' : '',
+                    state.class,
+                    isSelected ? 'selected' : ''
+                ].filter(Boolean).join(' ');
                 
                 return `
-                    <div class="grid-cell ${isHQ ? 'hq' : ''}" onclick="gameController.clickCell(${index})">
-                        ${icon}
-                        ${cell.level > 0 ? `<div class="lv">Lv.${cell.level}</div>` : ''}
+                    <div class="${classes}" 
+                         onclick="gameController.clickCell(${index})"
+                         data-index="${index}"
+                         data-building="${cell.type}">
+                        <div class="cell-icon">${icon}</div>
+                        ${cell.level > 0 ? `<div class="cell-level">Lv.${cell.level}</div>` : ''}
+                        ${state.indicator ? `<div class="cell-state">${state.indicator}</div>` : ''}
                     </div>
                 `;
             }).join('');
         },
 
-        // 點擊格子
+        // 點擊格子（增強版）
         clickCell(index) {
             const cell = GameState.current.grid[index];
             if (!cell) return;
 
+            this.selectedCellIndex = index;
+            this.renderMap();
+
             if (cell.type === 'empty') {
-                Toast.show('建築功能開發中...', 1500);
+                this.showBuildingPanel(index, cell);
             } else {
-                Toast.show(`${baseSystem.getBuildingType(cell.type).name} Lv.${cell.level}`, 1500);
+                this.showBuildingPanel(index, cell);
             }
+        },
+
+        // 顯示建築詳情面板
+        showBuildingPanel(index, cell) {
+            const panel = document.getElementById('building-panel');
+            const content = document.getElementById('building-panel-content');
+            const title = document.getElementById('building-panel-title');
+            
+            if (!panel || !content || !title) return;
+
+            const building = baseSystem.getBuildingType(cell.type);
+            
+            if (cell.type === 'empty') {
+                title.textContent = '空地';
+                content.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #888;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">⬜</div>
+                        <p style="margin-bottom: 20px;">這是一塊空地，可以建造建築</p>
+                        <button class="building-action-btn" onclick="Toast.show('建築功能開發中...', 1500)">
+                            🏗️ 建造建築
+                        </button>
+                    </div>
+                `;
+            } else {
+                title.textContent = building.name;
+                
+                const state = this.getBuildingState(cell);
+                const upgradeCost = cell.level < building.maxLevel
+                    ? (typeof building.upgradeCost === 'function' 
+                        ? building.upgradeCost(cell.level) 
+                        : building.upgradeCost)
+                    : 0;
+                
+                const canUpgrade = cell.level < building.maxLevel && GameState.current.money >= upgradeCost;
+                
+                content.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 64px; margin-bottom: 12px;">${building.icon}</div>
+                        <div style="font-size: 20px; color: var(--gold); font-weight: 700;">${building.name}</div>
+                        <div style="font-size: 12px; color: #888; margin-top: 4px;">${building.description || ''}</div>
+                    </div>
+                    
+                    <div class="building-detail-item">
+                        <div class="building-detail-label">等級</div>
+                        <div class="building-detail-value">Lv. ${cell.level} / ${building.maxLevel}</div>
+                    </div>
+                    
+                    ${cell.income > 0 ? `
+                        <div class="building-detail-item">
+                            <div class="building-detail-label">日產量</div>
+                            <div class="building-detail-value">$${cell.income.toLocaleString()}</div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="building-detail-item">
+                        <div class="building-detail-label">狀態</div>
+                        <div class="building-detail-value">${state.indicator} ${state.class === 'producing' ? '生產中' : state.class === 'maxed' ? '已滿級' : '閒置'}</div>
+                    </div>
+                    
+                    ${cell.type !== 'hq' ? `
+                        <div class="building-detail-item">
+                            <div class="building-detail-label">防禦貢獻</div>
+                            <div class="building-detail-value">+${cell.level * 10}</div>
+                        </div>
+                    ` : `
+                        <div class="building-detail-item">
+                            <div class="building-detail-label">防禦貢獻</div>
+                            <div class="building-detail-value">+${cell.level * 50}</div>
+                        </div>
+                        <div class="building-detail-item">
+                            <div class="building-detail-label">人手上限</div>
+                            <div class="building-detail-value">${5 + cell.level * 5}</div>
+                        </div>
+                    `}
+                    
+                    <div style="margin-top: 24px;">
+                        ${cell.level < building.maxLevel ? `
+                            <button class="building-action-btn" 
+                                    onclick="gameController.upgradeBuilding(${index})"
+                                    ${!canUpgrade ? 'disabled' : ''}>
+                                ⬆️ 升級建築 ($${upgradeCost.toLocaleString()})
+                            </button>
+                        ` : `
+                            <div style="text-align: center; padding: 12px; background: rgba(212,175,55,0.1); border-radius: 6px; color: var(--gold); font-size: 13px;">
+                                ⭐ 已達最高等級
+                            </div>
+                        `}
+                        
+                        ${cell.type !== 'hq' ? `
+                            <button class="building-action-btn danger" 
+                                    onclick="gameController.demolishBuilding(${index})">
+                                💥 拆除建築
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            panel.classList.add('show');
+        },
+
+        // 關閉建築面板
+        closeBuildingPanel() {
+            const panel = document.getElementById('building-panel');
+            if (panel) {
+                panel.classList.remove('show');
+            }
+            this.selectedCellIndex = null;
+            this.renderMap();
+        },
+
+        // 升級建築
+        upgradeBuilding(index) {
+            const result = baseSystem.upgrade(index);
+            
+            if (result.success) {
+                Toast.success(result.message);
+                this.updateHeader();
+                this.renderMap();
+                
+                // 更新右側面板
+                const cell = GameState.current.grid[index];
+                this.showBuildingPanel(index, cell);
+            } else {
+                Toast.error(result.message);
+            }
+        },
+
+        // 拆除建築
+        demolishBuilding(index) {
+            showConfirm('確定要拆除這個建築嗎？將返還 50% 的費用。', () => {
+                const result = baseSystem.demolish(index);
+                
+                if (result.success) {
+                    Toast.success(result.message);
+                    this.updateHeader();
+                    this.renderMap();
+                    this.closeBuildingPanel();
+                } else {
+                    Toast.error(result.message);
+                }
+            });
         },
 
         // 更新頭部資源
@@ -661,6 +1107,7 @@
 
             // 更新 UI
             this.updateHeader();
+            this.renderMap();
 
             Toast.success(`第 ${GameState.current.day} 天 | +$${dailyIncome.toLocaleString()}`);
         },
