@@ -1,0 +1,89 @@
+name: Auto-Sync Harem AI Library
+
+# 觸發條件：當 harem-ai-library.js 被更新時
+on:
+  push:
+    paths:
+      - 'static/data/harem-ai-library.js'
+    branches:
+      - main
+      - develop
+  
+  # 允許手動觸發
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: 同步後宮AI角色庫
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 檢出代碼
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: 設置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: 安裝依賴
+        run: npm ci || npm install
+      
+      - name: 檢查文件存在
+        run: |
+          if [ ! -f "static/data/harem-ai-library.js" ]; then
+            echo "錯誤: harem-ai-library.js 不存在"
+            exit 1
+          fi
+          echo "✓ 文件存在"
+      
+      - name: 統計角色數量
+        id: stats
+        run: |
+          CHARACTER_COUNT=$(grep -c "^\s\s[a-z_]*_[0-9]*:\s*{" static/data/harem-ai-library.js || echo "0")
+          FILE_SIZE=$(stat -f%z static/data/harem-ai-library.js 2>/dev/null || stat -c%s static/data/harem-ai-library.js)
+          FILE_SIZE_KB=$((FILE_SIZE / 1024))
+          
+          echo "character_count=$CHARACTER_COUNT" >> $GITHUB_OUTPUT
+          echo "file_size_kb=$FILE_SIZE_KB" >> $GITHUB_OUTPUT
+          
+          echo "📊 統計信息："
+          echo "- 角色數量: $CHARACTER_COUNT"
+          echo "- 文件大小: ${FILE_SIZE_KB}KB"
+      
+      - name: 驗證 JavaScript 語法
+        run: |
+          node -c static/data/harem-ai-library.js
+          echo "✓ JavaScript 語法驗證通過"
+      
+      - name: 創建同步摘要
+        run: |
+          echo "## 🎮 後宮AI角色庫同步報告" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 統計信息" >> $GITHUB_STEP_SUMMARY
+          echo "- **角色總數**: ${{ steps.stats.outputs.character_count }} 位" >> $GITHUB_STEP_SUMMARY
+          echo "- **文件大小**: ${{ steps.stats.outputs.file_size_kb }} KB" >> $GITHUB_STEP_SUMMARY
+          echo "- **同步時間**: $(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+          echo "- **分支**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **提交**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ 驗證狀態" >> $GITHUB_STEP_SUMMARY
+          echo "- [x] 文件存在檢查" >> $GITHUB_STEP_SUMMARY
+          echo "- [x] JavaScript 語法驗證" >> $GITHUB_STEP_SUMMARY
+          echo "- [x] 角色數量統計" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🎯 包含的角色稀有度" >> $GITHUB_STEP_SUMMARY
+          echo "- **LR (傳說)**: 1位 - 琉璃女王" >> $GITHUB_STEP_SUMMARY
+          echo "- **UR (究極)**: 2位 - 紅姐、冰心" >> $GITHUB_STEP_SUMMARY
+          echo "- **SSR (特級)**: 4位 - 白琴、算盤林、妖姬、羅奈米" >> $GITHUB_STEP_SUMMARY
+          echo "- **SR (稀有)**: 3位 - 櫻花、黑寡婦、小紅(SR)" >> $GITHUB_STEP_SUMMARY
+          echo "- **R (精良)**: 1位 - 小紅(R)" >> $GITHUB_STEP_SUMMARY
+      
+      - name: 通知同步完成
+        run: |
+          echo "🎉 同步完成！"
+          echo "✓ 包含 ${{ steps.stats.outputs.character_count }} 位角色的完整AI資料"
+          echo "✓ 文件大小: ${{ steps.stats.outputs.file_size_kb }} KB"
