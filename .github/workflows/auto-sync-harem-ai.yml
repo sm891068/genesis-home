@@ -79,8 +79,8 @@ jobs:
           echo "- **LR (傳說)**: 1位 - 琉璃女王" >> $GITHUB_STEP_SUMMARY
           echo "- **UR (究極)**: 2位 - 紅姐、冰心" >> $GITHUB_STEP_SUMMARY
           echo "- **SSR (特級)**: 4位 - 白琴、算盤林、妖姬、羅奈米" >> $GITHUB_STEP_SUMMARY
-          echo "- **SR (稀有)**: 3位 - 櫻花、黑寡婦、小紅(SR)" >> $GITHUB_STEP_SUMMARY
-          echo "- **R (精良)**: 1位 - 小紅(R)" >> $GITHUB_STEP_SUMMARY
+          echo "- **SR (稀有)**: 2位 - 櫻花、黑寡婦" >> $GITHUB_STEP_SUMMARY
+          echo "- **R (精良)**: 1位 - 小紅" >> $GITHUB_STEP_SUMMARY
       
       - name: 通知同步完成
         run: |
