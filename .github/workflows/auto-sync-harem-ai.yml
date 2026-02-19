@@ -17,6 +17,10 @@ jobs:
     name: 同步後宮AI角色庫
     runs-on: ubuntu-latest
     
+    # 設置明確的權限以提高安全性
+    permissions:
+      contents: read  # 讀取倉庫內容
+    
     steps:
       - name: 檢出代碼
         uses: actions/checkout@v4
