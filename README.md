@@ -55,6 +55,7 @@ v0.1 會先建立角色分類與資料基礎，後續再擴充大量角色。
 
 - `docs/V0.1_REBUILD_FOUNDATION.md`
 - `docs/V0.1_SYSTEM_SCOPE.md`
+- `docs/INTERNAL_GAME_REDESIGN.md`
 - `docs/LEGACY_CONTENT_AUDIT.md`
 - `docs/JAPANESE_YAKUZA_SETTING.md`
 - `docs/MAIN_MENU_8_FEATURES.md`
