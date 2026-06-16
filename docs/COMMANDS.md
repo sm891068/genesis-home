@@ -106,7 +106,7 @@ gh auth login
 ```bash
 git status
 git add .
-git commit -m "docs: add v0.4 core loop plan"
+git commit -m "docs: define v0.1 rebuild foundation"
 ```
 
 ## 推送到 GitHub
@@ -118,25 +118,25 @@ git push -u origin main
 ## 建立功能分支
 
 ```bash
-git checkout -b feature/v0.4-core-loop
+git checkout -b feature/v0.1-rebuild-foundation
 ```
 
 ## 推送分支
 
 ```bash
-git push -u origin feature/v0.4-core-loop
+git push -u origin feature/v0.1-rebuild-foundation
 ```
 
 ## 開 Pull Request
 
 ```bash
-gh pr create --base main --head feature/v0.4-core-loop --title "feat: add v0.4 core loop" --body "Add the first playable core loop plan and implementation groundwork."
+gh pr create --base main --head feature/v0.1-rebuild-foundation --title "feat: define v0.1 rebuild foundation" --body "Define the refreshed v0.1 foundation for the black society strategy game."
 ```
 
 ## 建議提交訊息
 
 ```bash
-docs: add v0.4 core loop plan
+docs: define v0.1 rebuild foundation
 feat: add day cycle resource state
 feat: add base building system
 feat: add daily event choices
@@ -144,12 +144,12 @@ feat: add local save system
 fix: correct route selection state
 ```
 
-## v0.4 開發順序指令備忘
+## v0.1 開發順序指令備忘
 
 實作時建議用這個節奏：
 
 ```bash
-git checkout -b feature/v0.4-core-loop
+git checkout -b feature/v0.1-rebuild-foundation
 npm install
 npm run dev
 ```
@@ -161,5 +161,5 @@ npm run build
 git status
 git add .
 git commit -m "feat: add day cycle resource state"
-git push -u origin feature/v0.4-core-loop
+git push -u origin feature/v0.1-rebuild-foundation
 ```
