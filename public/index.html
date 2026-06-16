@@ -206,6 +206,160 @@
             .menu-buttons { min-width: 240px; gap: 10px; }
             .menu-btn { padding: 14px 28px; font-size: 14px; }
         }
+
+        /* ========== v0.1 rebuild main menu cover layout ========== */
+        :root {
+            --text-muted: #a8a096;
+        }
+
+        #main-menu {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(420px, 560px);
+            grid-auto-rows: auto;
+            align-items: center;
+            align-content: center;
+            justify-content: end;
+            gap: 10px;
+            min-height: 680px;
+            padding: clamp(24px, 4vw, 56px);
+            background: #06070b;
+            overflow: hidden;
+        }
+
+        #main-menu::before,
+        #main-menu::after {
+            content: '';
+            position: absolute;
+            inset-block: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        #main-menu::before {
+            left: 0;
+            width: 50%;
+            background-image:
+                linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.16) 62%, rgba(0,0,0,0.86)),
+                url('/static/images/main-menu-left-cover.png');
+            background-position: center;
+        }
+
+        #main-menu::after {
+            right: 0;
+            width: 50%;
+            background-image:
+                linear-gradient(90deg, rgba(0,0,0,0.88), rgba(0,0,0,0.18) 28%, rgba(0,0,0,0.34)),
+                url('/static/images/main-menu-right-cover.png');
+            background-position: center right;
+        }
+
+        #main-menu > .logo,
+        #main-menu > .subtitle,
+        #main-menu > .menu-buttons,
+        #main-menu > .footer-info {
+            grid-column: 2;
+            position: relative;
+            z-index: 3;
+            width: min(440px, 100%);
+            justify-self: center;
+        }
+
+        .logo {
+            align-self: end;
+            margin-bottom: 6px;
+            text-align: center;
+            font-size: 36px;
+            letter-spacing: 0;
+        }
+
+        .subtitle {
+            margin-bottom: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .menu-buttons {
+            min-width: 0;
+            gap: 8px;
+            padding: 18px;
+            background:
+                linear-gradient(180deg, rgba(8, 9, 12, 0.82), rgba(8, 9, 12, 0.62)),
+                radial-gradient(circle at top, rgba(212,175,55,0.18), transparent 55%);
+            border: 1px solid rgba(212, 175, 55, 0.54);
+            box-shadow:
+                0 18px 60px rgba(0,0,0,0.48),
+                inset 0 0 0 1px rgba(255,255,255,0.04);
+            backdrop-filter: blur(2px);
+        }
+
+        .menu-btn {
+            min-height: 50px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(20,19,17,0.86), rgba(212,175,55,0.07));
+            border: 1px solid rgba(212, 175, 55, 0.48);
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .menu-label {
+            font-size: 16px;
+        }
+
+        .menu-desc {
+            margin-top: 4px;
+        }
+
+        .footer-info {
+            position: relative;
+            right: auto;
+            bottom: auto;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            #main-menu {
+                grid-template-columns: 1fr;
+                justify-content: center;
+                min-height: 100vh;
+                padding: 28px 18px 54px;
+            }
+
+            #main-menu::before {
+                width: 100%;
+                opacity: 0.44;
+            }
+
+            #main-menu::after {
+                width: 100%;
+                opacity: 0.78;
+                background-position: center;
+            }
+
+            #main-menu > .logo,
+            #main-menu > .subtitle,
+            #main-menu > .menu-buttons,
+            #main-menu > .footer-info {
+                grid-column: 1;
+                width: min(430px, 100%);
+            }
+
+            .logo { font-size: 34px; }
+            .subtitle { margin-bottom: 14px; }
+            .menu-buttons { gap: 9px; padding: 18px; }
+            .menu-btn { min-height: 54px; padding: 10px 14px; }
+            .footer-info {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-buttons { gap: 8px; padding: 14px; }
+            .menu-label { font-size: 15px; }
+            .menu-desc { font-size: 11px; }
+        }
     </style>
 </head>
 <body>
