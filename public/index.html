@@ -387,6 +387,7 @@
             
             // 檢查是否有存檔
             this.updateContinueButton();
+            this.normalizeContinueButton();
             
             // 初始化下雨動畫
             this.initRain();
@@ -407,6 +408,25 @@
         },
 
         // 新遊戲 - 啟動父親對話
+        normalizeContinueButton() {
+            const btn = document.getElementById('continue-btn');
+            const latestSave = GameState.getLatestSave();
+
+            if (latestSave) {
+                btn.disabled = false;
+                btn.innerHTML = `
+                    <span class="menu-label">繼續遊戲 (Day ${latestSave.day})</span>
+                    <span class="menu-desc">讀取最近的幫派存檔</span>
+                `;
+            } else {
+                btn.disabled = true;
+                btn.innerHTML = `
+                    <span class="menu-label">繼續遊戲</span>
+                    <span class="menu-desc">目前沒有可讀取的存檔</span>
+                `;
+            }
+        },
+
         newGame() {
             this.showFatherDialogue();
         },
