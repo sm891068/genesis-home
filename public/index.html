@@ -142,6 +142,21 @@
             transform: none;
             box-shadow: none;
         }
+
+        .menu-label {
+            display: block;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .menu-desc {
+            display: block;
+            margin-top: 6px;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.35;
+        }
         
         .footer-info {
             position: fixed;
@@ -302,9 +317,73 @@
     // ========== 主選單控制器 ==========
     const menuController = {
         selectedRoute: null,
+
+        renderRedevelopmentMenu() {
+            const menu = document.querySelector('.menu-buttons');
+            if (!menu) return;
+
+            const items = [
+                {
+                    id: 'new-game-btn',
+                    label: '新的傳承',
+                    desc: '從父親遺言開始新遊戲',
+                    action: 'menuController.newGame()'
+                },
+                {
+                    id: 'continue-btn',
+                    label: '繼續遊戲',
+                    desc: '讀取最近的幫派存檔',
+                    action: 'menuController.continueGame()',
+                    disabled: true
+                },
+                {
+                    label: '父親主線',
+                    desc: '查看遺言、舊帳本與主線章節',
+                    action: 'menuController.showFatherMainline()'
+                },
+                {
+                    label: '幫派基地',
+                    desc: '管理建設、資源與據點',
+                    action: 'menuController.showBaseManagement()'
+                },
+                {
+                    label: '聯機戰鬥',
+                    desc: 'PVP、攻擊其他玩家幫派與戰報',
+                    action: 'menuController.showOnlineBattle()'
+                },
+                {
+                    label: '夥伴圖鑑',
+                    desc: '查看角色、隊伍、信任與能力',
+                    action: 'menuController.showPartnerGallery()'
+                },
+                {
+                    label: '榮耀殿堂',
+                    desc: '成就、排名、戰績與里程碑',
+                    action: 'menuController.showGloryHall()'
+                },
+                {
+                    label: '設定',
+                    desc: '音效、畫面、存檔與帳號資料',
+                    action: 'menuController.showOfficeSettings()'
+                }
+            ];
+
+            menu.innerHTML = items.map((item) => `
+                <button class="menu-btn" ${item.id ? `id="${item.id}"` : ''} onclick="${item.action}" ${item.disabled ? 'disabled' : ''}>
+                    <span class="menu-label">${item.label}</span>
+                    <span class="menu-desc">${item.desc}</span>
+                </button>
+            `).join('');
+
+            const footer = document.querySelector('.footer-info');
+            if (footer) {
+                footer.textContent = 'v0.4.0 Redevelopment | Underworld Architect';
+            }
+        },
         
         init() {
             console.log('[MainMenu] 初始化主選單');
+            this.renderRedevelopmentMenu();
             
             // 檢查是否有存檔
             this.updateContinueButton();
@@ -621,6 +700,18 @@
         },
 
         // 初始化下雨動畫
+        showFatherMainline() {
+            Toast.show('父親主線：雨夜遺言與舊帳本章節規劃中...', 2400);
+        },
+
+        showBaseManagement() {
+            Toast.show('幫派基地將整合建設、資源與據點管理。', 2400);
+        },
+
+        showOnlineBattle() {
+            Toast.show('聯機戰鬥規劃中：PVP、攻擊玩家幫派與戰報系統。', 2600);
+        },
+
         initRain() {
             const rainContainer = document.getElementById('rain');
             const dropCount = 100; // 雨滴數量
