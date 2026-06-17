@@ -1,0 +1,21 @@
+{
+  "backupRoot": "C:/Users/USER/Palavia-Backups",
+  "sources": [
+    {
+      "name": "palavia-project",
+      "path": "C:/Users/USER/Documents/Codex/2026-06-17/ui-thirteen-astral-rings-10-30"
+    }
+  ],
+  "exclude": [
+    "node_modules",
+    ".git",
+    "dist",
+    ".vite",
+    ".codex-remote-attachments",
+    "*.tmp",
+    "*.log"
+  ],
+  "retention": {
+    "keepLast": 10
+  }
+}

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="《帕拉維亞》官方網站 - 星辰文明、五大界域與星辰魔法評議會"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2304050a'/%3E%3Cpath d='M32 8l5.8 17.4H56L41.1 36.1 46.8 54 32 43.1 17.2 54l5.7-17.9L8 25.4h18.2L32 8z' fill='%23f4f7ff'/%3E%3Ccircle cx='32' cy='32' r='24' fill='none' stroke='%23d8c998' stroke-width='2'/%3E%3C/svg%3E"
+    />
+    <title>帕拉維亞 | PARAVIA</title>
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="astral-canvas" aria-hidden="true"></canvas>
+
+      <header class="site-header" aria-label="帕拉維亞官方網站">
+        <a class="site-brand" href="#home" aria-label="PARAVIA 帕拉維亞">
+          <span>PARAVIA</span>
+          <strong>帕拉維亞</strong>
+        </a>
+        <button
+          class="menu-toggle"
+          id="menu-toggle"
+          type="button"
+          aria-label="開啟主選單"
+          aria-controls="site-menu"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      <nav class="site-menu" id="site-menu" aria-label="官方主選單">
+        <a href="#home">世界起源</a>
+        <a href="#realms">五大界域</a>
+        <a href="#powers">三大勢力</a>
+        <a href="#magic">魔法源律</a>
+        <a href="#radiance">光輝系統</a>
+        <a href="#council">星辰評議會</a>
+        <a href="#spires">十三主塔</a>
+        <a href="#south">南大陸</a>
+        <a href="#gram">格拉姆地區</a>
+        <a href="#gobi">歌碧半島</a>
+        <a href="#races">種族文明</a>
+        <a href="#characters">角色圖鑑</a>
+        <a href="#dungeons">副本資料</a>
+        <a href="#media">媒體中心</a>
+        <a href="#news">公告中心</a>
+        <a href="#member">會員中心</a>
+      </nav>
+
+      <section class="gate is-visible" id="gate" aria-label="帕拉維亞入口">
+        <p class="gate__council">Celestial Magic Council</p>
+        <h1>PARAVIA <span>帕拉維亞</span></h1>
+        <button class="gate__button" id="enter-button" type="button">
+          進入星辰典藏庫
+        </button>
+      </section>
+
+      <section class="ritual" id="ritual" aria-live="polite">
+        <div class="quote" id="quote">
+          <p>當創世之光照亮虛無，</p>
+          <p>星辰開始記錄世界。</p>
+        </div>
+
+        <div class="brand-mark" id="brand-mark">
+          <p class="brand-mark__latin">PARAVIA</p>
+          <p class="brand-mark__name">帕拉維亞</p>
+          <p class="brand-mark__council">星辰魔法評議會</p>
+          <p class="brand-mark__sub">Celestial Magic Council</p>
+        </div>
+
+        <div class="auth-log" id="auth-log">
+          <p>正在連接星辰總塔……</p>
+          <p>正在校準十三主塔……</p>
+          <p>正在開啟星辰典藏庫……</p>
+        </div>
+      </section>
+
+      <section class="site-content" id="home">
+        <section class="hero">
+          <div class="hero__copy">
+            <p class="eyebrow">Celestial Fantasy World</p>
+            <h2>帕拉維亞</h2>
+            <p>
+              由創世者墨九與十柱女神共同奠定的星辰文明。五大界域、星辰魔法評議會、十三主塔與深淵威脅，共同構成這個神話奇幻世界的命運核心。
+            </p>
+          </div>
+          <div class="hero__sigil" aria-hidden="true">
+            <span>CMC</span>
+          </div>
+        </section>
+
+        <section class="realm-intro" id="realms" aria-labelledby="realms-title">
+          <div class="section-heading">
+            <p class="eyebrow">Five Realms</p>
+            <h2 id="realms-title">五大界域</h2>
+            <p>
+              帕拉維亞並非單一世界，而是由根源、秩序、變革、文明與深淵交織成的五重宇宙結構。
+            </p>
+          </div>
+
+          <div class="realm-stage" id="realm-stage">
+            <article class="realm-panel is-active" data-realm="elder">
+              <div>
+                <p class="realm-panel__label">Elder Realm</p>
+                <h3>古界</h3>
+                <p>世界的根源與原始魔力之地，風、火、水、土等自然元素皆從此誕生。</p>
+              </div>
+            </article>
+            <article class="realm-panel" data-realm="divine">
+              <div>
+                <p class="realm-panel__label">Divine Realm</p>
+                <h3>神界</h3>
+                <p>秩序、智慧與守護的中心，由墨九、十柱女神與星辰魔法評議會共同維繫。</p>
+              </div>
+            </article>
+            <article class="realm-panel" data-realm="abyssal-flame">
+              <div>
+                <p class="realm-panel__label">Abyssal Flame Realm</p>
+                <h3>魔界</h3>
+                <p>九大家族統御的變革之域，血脈、戰意、熔火與混沌力量在此演化。</p>
+              </div>
+            </article>
+            <article class="realm-panel" data-realm="mortal">
+              <div>
+                <p class="realm-panel__label">Mortal Realm</p>
+                <h3>人界</h3>
+                <p>十三種族與文明交會的舞台，也是冒險者踏入命運洪流的起點。</p>
+              </div>
+            </article>
+            <article class="realm-panel" data-realm="void">
+              <div>
+                <p class="realm-panel__label">Abyssal Void Realm</p>
+                <h3>淵界</h3>
+                <p>七大罪領主與腐化意志盤據之地，持續侵蝕星紋、神柱與界域邊界。</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="realm-tabs" aria-label="切換五大界域">
+            <button class="is-active" type="button" data-realm-target="elder">古界</button>
+            <button type="button" data-realm-target="divine">神界</button>
+            <button type="button" data-realm-target="abyssal-flame">魔界</button>
+            <button type="button" data-realm-target="mortal">人界</button>
+            <button type="button" data-realm-target="void">淵界</button>
+          </div>
+        </section>
+
+        <section class="feature-bands" aria-label="帕拉維亞核心內容">
+          <article id="council">
+            <p class="eyebrow">Council</p>
+            <h3>星辰魔法評議會</h3>
+            <p>由智姬提出制度原型、墨九擴建而成的最高魔法治理中樞，監管星辰之力、深淵風險與十三主塔。</p>
+          </article>
+          <article id="radiance">
+            <p class="eyebrow">Radiance Rune Path</p>
+            <h3>光輝符文之路</h3>
+            <p>裝備進化與魔法導通的古老技術。低階符文較易升階，高階符文則承載更龐大的星辰記憶與風險。</p>
+          </article>
+          <article id="south">
+            <p class="eyebrow">Southern Continent</p>
+            <h3>南大陸</h3>
+            <p>由東境、西境、北境與南境構成。北境紅土山脈阻斷南北交通，東境有格拉姆森林，南境預定包含歌碧半島。</p>
+          </article>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
