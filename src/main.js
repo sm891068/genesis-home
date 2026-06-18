@@ -10,8 +10,13 @@ const authLog = document.querySelector("#auth-log");
 const siteContent = document.querySelector(".site-content");
 const menuToggle = document.querySelector("#menu-toggle");
 const siteMenu = document.querySelector("#site-menu");
+const menuLinks = siteMenu.querySelectorAll("a");
 const realmButtons = document.querySelectorAll("[data-realm-target]");
 const realmPanels = document.querySelectorAll("[data-realm]");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const MENU_OPEN_LABEL = "開啟主選單";
+const MENU_CLOSE_LABEL = "關閉主選單";
 
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x02030a, 0.045);
@@ -124,33 +129,50 @@ window.addEventListener("pointermove", (event) => {
   pointer.x = (event.clientX / window.innerWidth - 0.5) * 2;
   pointer.y = (event.clientY / window.innerHeight - 0.5) * 2;
 });
-
-menuToggle.addEventListener("click", () => {
-  const open = !siteMenu.classList.contains("is-open");
-  menuToggle.classList.toggle("is-open", open);
-  siteMenu.classList.toggle("is-open", open);
-  menuToggle.setAttribute("aria-expanded", String(open));
-  menuToggle.setAttribute("aria-label", open ? "關閉主選單" : "開啟主選單");
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") setMenuOpen(false);
 });
 
-siteMenu.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", () => {
-    menuToggle.classList.remove("is-open");
-    siteMenu.classList.remove("is-open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "開啟主選單");
-  });
+menuToggle.addEventListener("click", () => {
+  setMenuOpen(!siteMenu.classList.contains("is-open"));
+});
+
+menuLinks.forEach((link) => {
+  link.addEventListener("click", () => setMenuOpen(false));
 });
 
 realmButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    const target = button.dataset.realmTarget;
-    realmButtons.forEach((item) => item.classList.toggle("is-active", item === button));
-    realmPanels.forEach((panel) => {
-      panel.classList.toggle("is-active", panel.dataset.realm === target);
-    });
+    setActiveRealm(button.dataset.realmTarget);
   });
 });
+
+function setMenuOpen(open) {
+  menuToggle.classList.toggle("is-open", open);
+  siteMenu.classList.toggle("is-open", open);
+  menuToggle.setAttribute("aria-expanded", String(open));
+  menuToggle.setAttribute("aria-label", open ? MENU_CLOSE_LABEL : MENU_OPEN_LABEL);
+}
+
+function setActiveRealm(target) {
+  realmButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.realmTarget === target);
+  });
+  realmPanels.forEach((panel) => {
+    panel.classList.toggle("is-active", panel.dataset.realm === target);
+  });
+}
+
+function runLater(callback, delay) {
+  window.setTimeout(callback, prefersReducedMotion ? Math.min(delay, 650) : delay);
+}
+
+function revealRitualText() {
+  quote.classList.add("is-visible");
+  runLater(() => brandMark.classList.add("is-visible"), 9800);
+  runLater(() => authLog.classList.add("is-visible"), 13600);
+  runLater(() => siteContent.classList.add("is-visible"), 18800);
+}
 
 function buildCircleTexture(size = 128) {
   const textureCanvas = document.createElement("canvas");
@@ -321,10 +343,7 @@ function startSequence() {
   gate.classList.remove("is-visible");
   sequenceActive = true;
   sequenceStart = clock.elapsedTime;
-  quote.classList.add("is-visible");
-  setTimeout(() => brandMark.classList.add("is-visible"), 9800);
-  setTimeout(() => authLog.classList.add("is-visible"), 13600);
-  setTimeout(() => siteContent.classList.add("is-visible"), 18800);
+  revealRitualText();
   startHum();
 }
 
@@ -469,6 +488,7 @@ function resize() {
   const height = window.innerHeight;
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(width, height);
 }
 
